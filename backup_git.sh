@@ -1,7 +1,7 @@
 #!/bin/sh
 
-echo "running backup on git"
+echo "Backuping hgco git hub"
 
-sudo git add-A
-sudo git commit -m
+sudo git add -A
+sudo git commit
 sudo git push
