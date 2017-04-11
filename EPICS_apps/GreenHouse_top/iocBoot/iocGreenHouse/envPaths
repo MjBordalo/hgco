@@ -1,0 +1,5 @@
+epicsEnvSet("ARCH","linux-arm")
+epicsEnvSet("IOC","iocGreenHouse")
+epicsEnvSet("TOP","/home/pi/hgco/EPICS_apps/GreenHouse_top")
+epicsEnvSet("ASYN","/usr/local/epics/modules/asyn")
+epicsEnvSet("EPICS_BASE","/usr/local/epics/base")

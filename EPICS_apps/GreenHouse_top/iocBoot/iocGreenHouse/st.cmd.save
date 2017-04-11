@@ -1,0 +1,33 @@
+#! /bin/linux-arm/GreenHouse
+
+## You may have to change GreenHouse to something else
+## everywhere it appears in this file
+
+< envPaths
+
+#epicsEnvSet(STREAM_PROTOCOL_PATH,"GreenHouseApp/Db")
+epicsEnvSet(STREAM_PROTOCOL_PATH,".:../protocols")
+
+cd "${TOP}"
+
+## Register all support components
+dbLoadDatabase "dbd/GreenHouse.dbd"
+GreenHouse_registerRecordDeviceDriver pdbbase
+
+drvAsynSerialPortConfigure("USB0","/dev/ttyUSB0",0,0,0)
+asynSetOption("USB0",-1,"baud","115200")
+asynSetOption("USB0",-1,"bits","8")
+asynSetOption("USB0",-1,"parity","none")
+asynSetOption("USB0",-1,"stop","1")
+asynSetOption("USB0",-1,"clocal","Y")
+asynSetOption("USB0",-1,"crtscts","N")
+
+## Load record instances
+dbLoadRecords("db/arduino.db","user=miHost,PORT=USB0")
+#dbLoadRecords("db/example.db","user=miHost,PORT=USB0")
+
+cd "${TOP}/iocBoot/${IOC}"
+iocInit
+
+## Start any sequence programs
+#seq sncxxx,"user=piHost"

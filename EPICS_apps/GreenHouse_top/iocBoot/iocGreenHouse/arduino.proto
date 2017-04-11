@@ -1,0 +1,73 @@
+#My Protocol
+Terminator = LF;
+getTemp1 {
+    out "T";
+    in "%f";
+}
+getHum1 {
+    out "H";
+    in "%f";
+}
+getTemp2 {
+    out "I";
+    in "%f";
+}
+getHum2 {
+    out "J";
+    in "%f";
+}
+getWaterTemp{
+    out "W";
+    in "%f";
+}
+getLum {
+    out "L";
+    in "%d";  # the luminance sensor returns a int value
+}
+
+############################
+# Set functions
+############################
+setServo {
+	out "S%d";
+  @init { out "s"; in "%f";}
+}
+setFan {
+	out "F%d";
+  @init { out "f"; in "%f";}
+}
+setRELE1 {
+  out "A%b\n";
+  @init { out "a"; in "%b";}
+}
+setRELE2 {
+  out "B%b\n";
+  @init { out "b"; in "%b";}
+}
+setRELE3 {
+  out "C%b\n";
+  @init { out "c"; in "%b";}
+}
+setRELE4 {
+  out "D%b\n";
+  @init { out "d"; in "%b";}
+}
+
+ExtraInput = Error;
+
+#User variables
+#f="Freq";
+#f1= $f " %f";
+#
+#
+#
+
+
+########
+# Raspi
+########
+getPiTemp {
+    exec "/opt/vc/bin/vcgencmd measure_temp";
+    in "%($(USER):PiTemp.SVAL)s";
+    @init { exec "/opt/vc/bin/vcgencmd measure_temp"; in "%s"; }
+}

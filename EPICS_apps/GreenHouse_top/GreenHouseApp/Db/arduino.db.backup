@@ -1,0 +1,230 @@
+record(bi, "$(user):BulbB1")
+{
+	field(DESC, "Get Bulb B1 Status")	
+	field(DTYP, "stream")
+	field(INP, "@arduino.proto getBulb() $(PORT)")
+	field(SCAN, "I/O Intr")
+	field(ZNAM, "OFF")
+	field(ONAM, "ON")
+}
+
+#Windows actuator read back value input
+record(ai, "$(user):OC2DutyB1")
+{
+	field(DESC, "Scaled Duty Cycle")
+	field(DTYP, "stream")
+	field(INP, "@arduino.proto getPWM() $(PORT)")
+	field(SCAN, ".5 second")
+#Simulation Mode
+	#field(SIML, "$(user):Simulation_Mode NPP NMS")
+	#field(SIOL, "$(user):setOC2DutyB1 NPP NMS")
+	# Field Description
+# Engineering Units
+	field(EGU, "%")
+#Raw convertion 
+	field(LINR, "LINEAR")
+	field(EOFF, "0")
+	field(ESLO, "0.1")
+	#field(EOFF, "-4.614")
+	#field(ESLO, "0.01538")
+#Smoothing Factor
+	field(SMOO, "0.0")
+	field(LOPR, "0.0")							# Low Operating Range
+# High OPerating Range
+	field(HOPR, "255.0")
+	field(ADEL, "1.0")
+}
+
+#Temp (Raw Value)
+record(ai, "$(user):TempB1"){
+	field(DTYP, "stream")
+	field(INP, "@arduino.proto getTemp() $(PORT)")
+	field(DESC, "Scaled Tempreature")
+	field(SCAN, ".5 second")
+	#field(SIML, "$(user):Simulation_Mode NPP NMS")
+	field(FLNK, "$(user):TempB1C")
+	# Field Description
+# Engineering Units
+	#field(EGU, "Degree")
+	#field(PREC,"1")
+#Smoothing Factor
+	#field(SMOO, "0.0")
+	#field(LOPR, "-10")							# Low Operating Range
+# High OPerating Range
+	#field(HOPR, "8000.0")
+	#field(ADEL, "1")
+}
+
+record(ai, "$(user):photoH:get") {
+    field(DTYP, "stream")
+    field(INP, "@arduino.proto getHum() $(PORT)")
+    field(SCAN, ".5 second")
+    	#field(SIML, "$(user):Simulation_Mode NPP NMS")
+	field(FLNK, "$(user):TempB1C")
+	# Field Description
+# Engineering Units
+	field(EGU, "%")
+	field(PREC,"1")
+#Raw convertion 
+#See http://epics.web.psi.ch/software/streamdevice/doc/ai.html
+	field(LINR, "LINEAR")
+	field(EOFF, "0.0")
+	field(ESLO, "0.01")
+#Smoothing Factor
+	field(SMOO, "0.0")
+	field(LOPR, "0")							# Low Operating Range
+# High OPerating Range
+	field(HOPR, "100.0")
+	field(ADEL, "1")
+
+}
+
+
+#########################
+# User Set Points
+#####################
+record(ao, "$(user):RefTemp")
+{
+	field(DESC, "Reference temperature")
+	field(LOPR, "0")
+	field(HOPR, "70")
+	field(DRVL, "0")
+	field(DRVH, "60")
+	field(DOL, "35")
+	field(PINI, "YES")
+}
+
+record(ao, "$(user):KP")
+{
+	field(DESC, "proportionality value for controller")
+	field(VAL, "1.0")
+        field(LOPR, "-10.0")
+        field(HOPR, "10.0")
+	field(DRVL, "-10.0")
+	field(DRVH, "20.0")
+#	field(PINI, "YES")
+}
+
+################################
+###### Calc records   
+###############################
+record(calc, "$(user):Temp_Error")
+{
+	field(DESC, "Temperature error")
+	field(SCAN,".5 second")
+	field(CALC, "B-A")
+	field(INPA, "$(user):RefTemp CP MS")
+	field(INPB, "$(user):TempB1C.VAL CP MS")
+	field(EGU, "Kelvin")
+	field(HOPR, "10")
+	field(LOPR, "-10")
+	field(HIHI, "8")
+	field(HIGH, "6")
+	field(LOW, "4")
+	field(LOLO, "2")
+	field(HHSV, "MAJOR")
+	field(HSV, "MINOR")
+	field(LSV, "MINOR")
+	field(LLSV, "MAJOR")
+	field(FLNK, "$(user):Calc_OC PP NMS")
+}
+
+
+record(calc, "$(user):Calc_OC")
+{
+	field(DESC, "New Apperture")
+	field(SCAN,"1 second")
+	field(FLNK, "$(user):Calc_OC")
+	field(CALC, "(B+A*10)<0?0: ((B+A*10) >255? 255:(B+A*10))  ")
+	field(INPA, "$(user):Temp_Error.VAL CP MS")
+	field(INPB, "$(user):OC2DutyB1")
+	field(EGU, "DCU")
+	#field(OMSL,"closed_loop")	
+	field(FLNK, "$(user):setOC2DutyB1 PP NMS")
+}
+
+#################################################################
+#	Calculated/User ready records from $(BUS) in SM2 msg			#
+#################################################################
+
+#Calculation of Temperature in C
+record(calc, "$(user):TempB1C")
+{
+    field(DESC, "Calculation of TempB1 in ÂºC")
+	field(INPA, "$(user):TempB1.VAL CP MS")
+	field(CALC, "A*(0.01)")
+	field(PREC, "0")
+	field(ADEL, "0.0")
+    	field(EGU, "C")
+	field(LOPR, "0.0")
+	field(HOPR, "100.0")
+	field(LOLO, "20.0")
+	field(LOW, "30.0")
+	field(HIGH, "60.0")
+	field(HIHI, "70.0") 		
+	#field(LLSV, "MAJOR")
+	#field(LSV, "MINOR")
+	field(HSV, "MINOR")
+	field(HHSV, "MAJOR")
+}
+
+# Measure Time counter
+record(calc, "$(user):Timer")
+{
+	field(DESC, "Counter")
+	field(SCAN,"1 second")
+	field(CALC, "(A<B)?(A+C):D")
+	field(INPA, "$(user):Timer.VAL  NPP NMS")
+	field(INPB, "1000")
+	field(INPC, "1")
+	field(INPD, "0")
+	field(EGU, "Counts")
+	field(FLNK, "$(user):TempB1")
+	field(HOPR, "1000")
+	field(HIHI, "8")
+	field(HIGH, "6")
+	field(LOW, "4")
+	field(LOLO, "2")
+	field(HHSV, "MAJOR")
+	field(HSV, "MINOR")
+	field(LSV, "MINOR")
+	field(LLSV, "MAJOR")
+}
+
+#################################################################
+#	Out variables to $(BUS) of type MS msg						#
+#################################################################
+
+#Set Bulb B1 Off/On
+record(bo, "$(user):setBulbB1")
+{
+	field(DESC, "Set Bulb B1 Off/On")
+	field(DTYP, "stream")
+	field(ZNAM, "OFF")
+	field(ONAM, "ON")
+	field(OUT, "@arduino.proto setBulb() $(PORT)")
+}
+
+	#Set OC2 Duty Cycle
+record(ao, "$(user):setOC2DutyB1")
+{
+	field(DESC, "Set OC2 Dutty Cycle on B1")
+	field(DTYP, "stream")
+	#field(SIML, "$(user):Simulation_Mode NPP NMS")
+	field(OUT, "@arduino.proto setPWM() $(PORT)")
+	#field(OMSL, "closed_loop") 
+	field(LOPR, "0")
+	field(HOPR, "255")
+#PV used in closed_loop EPICS control  Mode
+	field(DOL,  "$(user):Calc_OC NPP NMS")
+	field(DRVL, "0.0")
+	field(DRVH, "255.0")
+	field(PINI, "YES")
+}
+
+
+
+
+
+
+
