@@ -7,10 +7,15 @@
 ### Check status
 `service mysql status`
 ### Other Commands
-### Backup
+### Backup & Restore
 Backup as mysql `root` user the `archive` db to `archive_bkp` document
 
-` mysqldump-u root -p archive >archive_bck `
+` mysqldump-u root -p archive >archive_bck.sql`
+
+
+Restore to `archive` db
+
+`mysql -u archive -p archive < archive_22_02_2017.sql`
 
 
 ## MySql commands
