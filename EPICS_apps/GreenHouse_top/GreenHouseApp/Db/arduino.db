@@ -123,7 +123,19 @@ record(ai, "$(user):Lum1")
 
 
 record(ai,	"$(user):LAI_1") {
-	field(DESC,	"Plant area in pixels")
+	field(DESC,	"Plant1 area in pixels")
+	field(EGU, "pixels")
+}
+record(ai,	"$(user):LAI_2") {
+	field(DESC,	"Plant2 area in pixels")
+	field(EGU, "pixels")
+}
+record(ai,	"$(user):LAI_3") {
+	field(DESC,	"Plant3 area in pixels")
+	field(EGU, "pixels")
+}
+record(ai,	"$(user):LAI_4") {
+	field(DESC,	"Plant4 area in pixels")
 	field(EGU, "pixels")
 }
 

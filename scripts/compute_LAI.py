@@ -13,6 +13,9 @@ import plantcv as pcv
 from CaChannel import CaChannel, CaChannelException
 
 
+#A way to call this script: /home/pi/hgco/scripts/compute_LAI.py -i /home/pi/camera/teste2.jpg -o output
+
+
 ### Parse command-line arguments
 def options():
     parser = argparse.ArgumentParser(description="Imaging processing with opencv")
@@ -274,10 +277,11 @@ def main():
 
     #Put area info into epics
     try:
-    chan = CaChannel('miHost:LAI')
-    chan.searchw()
-    chan.putw(shape_data[1])
-    chan.getw()
+        chan = CaChannel('miHost:LAI_1')
+        chan.searchw()
+        print "Put: " + str(shape_data[1]) + " into miHost:LAI_1"
+        chan.putw(shape_data[1])
+        chan.getw()
     except CaChannelException as e:
         print(e)
 if __name__ == '__main__':

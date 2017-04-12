@@ -13,8 +13,8 @@ cd /home/pi/camera
 
 
 #Take Snapshot
-raspistill -q 20 -w 1920 -h 1080 -a "$EXPNAME\n$DATE" -o teste.jpg -l latest.jpg
-#raspistill -q 20 -w 1920 -h 1080 -a "$EXPNAME\n$DATE" -o /home/pi/camera/$EXPNAME-$DATE.jpg -l latest.jpg
+#raspistill -q 20 -w 1920 -h 1080 -a "$EXPNAME\n$DATE" -o teste.jpg -l latest.jpg
+raspistill -q 20 -w 1920 -h 1080 -a "$EXPNAME\n$DATE" -o $EXPNAME-$DATE.jpg -l latest.jpg
 echo "Photo Taken"
 #Used raspistill flags
 # -q quality [100-0]
@@ -27,6 +27,7 @@ echo "Photo Taken"
 
 
 #Call PlantCV pipeline
-
-/home/pi/plantcv/mypipeline/mypipeline.py -i /home/pi/camera/teste.jpg -o output -D 'print'
+#TODO quando tiver a camera mudar para:
+#/home/pi/hgco/scripts/compute_LAI.py -i /home/pi/camera/$EXPNAME-$DATE.jpg -o output -D 'print' -r $EXPNAME-$DATE-results.txt
+/home/pi/hgco/scripts/compute_LAI.py -i /home/pi/camera/teste2.jpg -o output -D 'print' -r $EXPNAME-$DATE-results.txt
 echo "PlantCV pipeline runned"
