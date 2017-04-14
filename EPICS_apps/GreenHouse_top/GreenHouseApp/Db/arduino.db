@@ -27,6 +27,11 @@
 #					actual value.
 # ASLO & AOFF - Specify the Slope and offset Changing the pv VAL field according to:
 #								VAL = VAL*ASLO + AOFF
+
+# Specific for bi record
+# ZSV; OSV; COSV - Zero Severity, One Severity; Change of State Severity.
+#									The possible values for these fields are NO ALARM, MINOR, and MAJOR.
+#
 #################################################
 #		AI - Analog Input
 #################################################
@@ -34,6 +39,7 @@
 
 #Temperature of first DHT22 Sensor
 record(ai, "$(user):Temp1"){
+	info(autosaveFields, "VAL LOW")
 	field(DTYP, "stream")
 	field(INP, "@arduino.proto getTemp1() $(PORT)")
 	field(DESC, "Inside Temperature")
@@ -42,18 +48,19 @@ record(ai, "$(user):Temp1"){
 	field(HOPR, "50")
 	field(ADEL, "0.5")
 	field(EGU, "C")
+	field(PREC, "1")
 
 	#Alarms
 	field(LOLO, "0")
 	field(LOW, "15")
-	field(HIGH, "35")
-	field(HIHI, "40")
-	field(LSV, "MAJOR")
+	field(HIGH, "30")
+	field(HIHI, "35")
 	field(LSV, "MINOR")
-	field(HSV, "MAJOR")
+	field(HSV, "MINOR")
 }
 
 record(ai, "$(user):Hum1"){
+	info(autosaveFields, "VAL LOW")
 	field(DTYP, "stream")
 	field(INP, "@arduino.proto getHum1() $(PORT)")
 	field(DESC, "Inside Humidity (sensor1)")
@@ -77,6 +84,7 @@ record(ai, "$(user):Temp2"){
 	field(SCAN, "2 second")
 	field(ADEL, "0.5")
 	field(EGU, "C")
+	field(PREC, "1")
 }
 record(ai, "$(user):Hum2"){
 	field(DTYP, "stream")
@@ -96,7 +104,7 @@ record(ai, "$(user):WaterTemp"){
 	field(INP, "@arduino.proto getWaterTemp() $(PORT)")
 	field(DESC, " Water temperature  ")
 	field(SCAN, "2 second")
-	field(ADEL, "0.3")
+	field(ADEL, "0.5")
 	field(EGU, "C")
 }
 
@@ -121,20 +129,24 @@ record(ai, "$(user):Lum1")
 	field(ESLO, "0.19074") #10.3/54
 }
 
-
+#Altough the LAI does not come from the arduino it is filed by a python script
 record(ai,	"$(user):LAI_1") {
+	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant1 area in pixels")
 	field(EGU, "pixels")
 }
 record(ai,	"$(user):LAI_2") {
+	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant2 area in pixels")
 	field(EGU, "pixels")
 }
 record(ai,	"$(user):LAI_3") {
+	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant3 area in pixels")
 	field(EGU, "pixels")
 }
 record(ai,	"$(user):LAI_4") {
+	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant4 area in pixels")
 	field(EGU, "pixels")
 }
@@ -145,18 +157,18 @@ record(ai,	"$(user):LAI_4") {
 #################################################
 
 record(ao, $(user):Apperture) {
-    field(DESC, "Servo motor set variable")
-    field(DTYP, "stream")
-    field(OUT, "@arduino.proto setServo() $(PORT)")
-		field(PINI,	"YES")
-    field(DRVL, "0")
-    field(DRVH, "170")
-		field(LOPR, "-5")
-		field(HOPR, "180")	#High Operating Range
-		field(ADEL, "1")
-		field(EGU, "servo angle")
-
-		field(SCAN, "2 second")
+	 info(autosaveFields, "VAL LOW")
+   	field(DESC, "Servo motor set variable")
+    	field(DTYP, "stream")
+    	field(OUT, "@arduino.proto setServo() $(PORT)")
+	field(PINI,	"YES")
+    	field(DRVL, "0")
+    	field(DRVH, "170")
+	field(LOPR, "-5")
+	field(HOPR, "180")	#High Operating Range
+	field(ADEL, "1")
+	field(EGU, "servo angle")
+	field(SCAN, "2 second")
 
 
 		#Set PID link
@@ -169,19 +181,20 @@ record(ao, $(user):Apperture) {
 }
 
 record(ao, $(user):Fan) {
-    field(DESC, "2Wire Fan")
-    field(DTYP, "stream")
-    field(OUT, "@arduino.proto setFan() $(PORT)")
-    field(DRVL, "0")
-    field(DRVH, "255")
-		field(LOPR, "0")
-		field(HOPR, "255")	#High Operating Range
-		field(ADEL, "1")
-		field(EGU, "dutycycle")
-		field(SCAN, "2 second")
-		field(PINI, "YES")
+	info(autosaveFields, "VAL LOW")
+    	field(DESC, "2Wire Fan")
+    	field(DTYP, "stream")
+    	field(OUT, "@arduino.proto setFan() $(PORT)")
+    	field(DRVL, "0")
+    	field(DRVH, "255")
+	field(LOPR, "0")
+	field(HOPR, "255")	#High Operating Range
+	field(ADEL, "10")
+	field(EGU, "dutycycle")
+	field(SCAN, "2 second")
+	field(PINI, "YES")
 
-		#Set PID link
+	#Set PID link
 		field(DOL, "$(user):FanPID")
 		field(OMSL,"closed_loop")
 }
@@ -191,8 +204,9 @@ record(bo, $(user):RELE1) {
 	field(DTYP, "stream")
 	field(OUT, "@arduino.proto setRELE1() $(PORT)")
 	field(PINI, "YES")
-	field(ONAM,	"ON")
-	field(ZNAM,	"OFF")
+	field(ONAM,	"OFF")
+	field(ZNAM,	"ON")
+	field(OSV,	"MAJOR") #one severity
 }
 record(bo, $(user):RELE2) {
 	field(DESC, "Bo for RELE2")
@@ -223,6 +237,7 @@ record(bo, $(user):RELE4) {
 #		Calc - Variables based on calculations
 #################################################
 record(calc, "$(user):currentDLI"){
+	info(autosaveFields, "VAL")		#autosave
 	field(DESC, "current integrated Daily light Integral")
 
 	field(INPA, "$(user):Lum1")
@@ -239,6 +254,7 @@ record(calc, "$(user):currentDLI"){
 }
 
 record(ai, "$(user):DLI"){
+	info(autosaveFields, "VAL")		#autosave
 	field(DESC, "Daily light Integral (mol.m-2.day-1)")
 	field(ADEL,	"1")
 }
@@ -252,7 +268,7 @@ record(stringin,"$(user):clock") {
 record(calcout,"$(user):check") {
   field(INPA,"$(user):clock")
 #  field(CALC,"A>235950?1:0")
-  field(CALC,"A>155550?0:1")
+  field(CALC,"A>045950?0:1")
   field(OOPT,"Transition To Zero")
   field(OUT,"$(user):do_reset PP")
 }
@@ -313,8 +329,8 @@ record(calc, "$(user):FanPID")
 ###################################
 # Setpoints
 ###################################
-record(ao, "$(user):TempSetpoint")
-{
+record(ao, "$(user):TempSetpoint"){
+	info(autosaveFields, "VAL")		#autosave
 	field(SCAN, "2 second")
 	field(DRVH, "40")
 	field(DRVL, "10")
@@ -325,8 +341,8 @@ record(ao, "$(user):TempSetpoint")
 #############################
 #   Debug
 #############################
-record(stringin , "$(user):ExpString")
-{
+record(stringin , "$(user):ExpString"){
+	info(autosaveFields, "VAL")		#autosave
 	field(VAL, "no experience")
 	field(DESC, "anotar estados da experiencia")
 }

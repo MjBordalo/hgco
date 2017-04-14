@@ -1,9 +1,10 @@
 # DO NOT EDIT: This file created by mkmf.pl,v 1.5 2002/03/25 21:33:24 jba Exp $ 
 
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/base.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/asyn.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/asyn.dbd
 ../O.Common/GreenHouse.dbd : ../../../dbd/stream.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/drvAsynSerialPort.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/drvAsynSerialPort.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/autosave-5-6-1/dbd/asSupport.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/menuGlobal.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/menuConvert.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/aaiRecord.dbd
@@ -35,8 +36,8 @@
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/subArrayRecord.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/waveformRecord.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/devSoft.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/asynRecord.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devEpics.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/asynRecord.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devEpics.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/menuAlarmSevr.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/menuAlarmStat.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/menuCompress.dbd
@@ -49,18 +50,18 @@
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/menuSimm.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/menuYesNo.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/dbCommon.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynOctet.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynInt32.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynInt8Array.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynInt16Array.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynInt32Array.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynInt32TimeSeries.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynFloat64.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynFloat32Array.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynFloat64Array.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynFloat64TimeSeries.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynUInt32Digital.dbd
-../O.Common/GreenHouse.dbd : /usr/local/epics/modules/asyn/dbd/devAsynRecord.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynOctet.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynInt32.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynInt8Array.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynInt16Array.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynInt32Array.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynInt32TimeSeries.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynFloat64.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynFloat32Array.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynFloat64Array.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynFloat64TimeSeries.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynUInt32Digital.dbd
+../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/devAsynRecord.dbd
 
 
 ../O.Common/GreenHouseInclude.dbd : ../Makefile

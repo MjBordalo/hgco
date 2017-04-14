@@ -216,7 +216,6 @@ epicsShareExtern dset *pvar_dset_asynWfOctetCmdResponse;
 epicsShareExtern dset *pvar_dset_asynWfOctetWriteRead;
 epicsShareExtern dset *pvar_dset_asynWfOctetRead;
 epicsShareExtern dset *pvar_dset_asynWfOctetWrite;
-epicsShareExtern dset *pvar_dset_asynWfOctetWriteBinary;
 epicsShareExtern dset *pvar_dset_asynInt8ArrayWfIn;
 epicsShareExtern dset *pvar_dset_asynInt8ArrayWfOut;
 epicsShareExtern dset *pvar_dset_asynInt16ArrayWfIn;
@@ -232,7 +231,7 @@ epicsShareExtern dset *pvar_dset_asynFloat64TimeSeries;
 epicsShareExtern dset *pvar_dset_devwaveformStream;
 epicsShareExtern dset *pvar_dset_asynRecordDevice;
 
-static const char * const deviceSupportNames[98] = {
+static const char * const deviceSupportNames[97] = {
     "devAaiSoft",
     "devaaiStream",
     "devAaoSoft",
@@ -316,7 +315,6 @@ static const char * const deviceSupportNames[98] = {
     "asynWfOctetWriteRead",
     "asynWfOctetRead",
     "asynWfOctetWrite",
-    "asynWfOctetWriteBinary",
     "asynInt8ArrayWfIn",
     "asynInt8ArrayWfOut",
     "asynInt16ArrayWfIn",
@@ -333,7 +331,7 @@ static const char * const deviceSupportNames[98] = {
     "asynRecordDevice"
 };
 
-static const dset * const devsl[98] = {
+static const dset * const devsl[97] = {
     pvar_dset_devAaiSoft,
     pvar_dset_devaaiStream,
     pvar_dset_devAaoSoft,
@@ -417,7 +415,6 @@ static const dset * const devsl[98] = {
     pvar_dset_asynWfOctetWriteRead,
     pvar_dset_asynWfOctetRead,
     pvar_dset_asynWfOctetWrite,
-    pvar_dset_asynWfOctetWriteBinary,
     pvar_dset_asynInt8ArrayWfIn,
     pvar_dset_asynInt8ArrayWfOut,
     pvar_dset_asynInt16ArrayWfIn,
@@ -453,18 +450,36 @@ epicsShareExtern void (*pvar_func_asynInterposeFlushRegister)(void);
 epicsShareExtern void (*pvar_func_asynInterposeEosRegister)(void);
 epicsShareExtern void (*pvar_func_streamRegistrar)(void);
 epicsShareExtern void (*pvar_func_drvAsynSerialPortRegisterCommands)(void);
+epicsShareExtern void (*pvar_func_save_restoreRegister)(void);
+epicsShareExtern void (*pvar_func_dbrestoreRegister)(void);
+epicsShareExtern void (*pvar_func_asInitHooksRegister)(void);
+epicsShareExtern void (*pvar_func_configMenuRegistrar)(void);
 
 epicsShareExtern int *pvar_int_asCaDebug;
 epicsShareExtern int *pvar_int_dbRecordsOnceOnly;
 epicsShareExtern int *pvar_int_dbBptNotMonotonic;
 epicsShareExtern int *pvar_int_dbTemplateMaxVars;
 epicsShareExtern int *pvar_int_streamDebug;
+epicsShareExtern int *pvar_int_save_restoreDebug;
+epicsShareExtern int *pvar_int_save_restoreNumSeqFiles;
+epicsShareExtern int *pvar_int_save_restoreSeqPeriodInSeconds;
+epicsShareExtern int *pvar_int_save_restoreIncompleteSetsOk;
+epicsShareExtern int *pvar_int_save_restoreDatedBackupFiles;
+epicsShareExtern int *pvar_int_save_restoreRemountThreshold;
+epicsShareExtern int *pvar_int_configMenuDebug;
 static struct iocshVarDef vardefs[] = {
 	{"asCaDebug", iocshArgInt, (void * const)pvar_int_asCaDebug},
 	{"dbRecordsOnceOnly", iocshArgInt, (void * const)pvar_int_dbRecordsOnceOnly},
 	{"dbBptNotMonotonic", iocshArgInt, (void * const)pvar_int_dbBptNotMonotonic},
 	{"dbTemplateMaxVars", iocshArgInt, (void * const)pvar_int_dbTemplateMaxVars},
 	{"streamDebug", iocshArgInt, (void * const)pvar_int_streamDebug},
+	{"save_restoreDebug", iocshArgInt, (void * const)pvar_int_save_restoreDebug},
+	{"save_restoreNumSeqFiles", iocshArgInt, (void * const)pvar_int_save_restoreNumSeqFiles},
+	{"save_restoreSeqPeriodInSeconds", iocshArgInt, (void * const)pvar_int_save_restoreSeqPeriodInSeconds},
+	{"save_restoreIncompleteSetsOk", iocshArgInt, (void * const)pvar_int_save_restoreIncompleteSetsOk},
+	{"save_restoreDatedBackupFiles", iocshArgInt, (void * const)pvar_int_save_restoreDatedBackupFiles},
+	{"save_restoreRemountThreshold", iocshArgInt, (void * const)pvar_int_save_restoreRemountThreshold},
+	{"configMenuDebug", iocshArgInt, (void * const)pvar_int_configMenuDebug},
 	{NULL, iocshArgInt, NULL}
 };
 
@@ -485,7 +500,7 @@ int GreenHouse_registerRecordDeviceDriver(DBBASE *pbase)
     }
 
     registerRecordTypes(pbase, 29, recordTypeNames, rtl);
-    registerDevices(pbase, 98, deviceSupportNames, devsl);
+    registerDevices(pbase, 97, deviceSupportNames, devsl);
     registerDrivers(pbase, 2, driverSupportNames, drvsl);
     (*pvar_func_asSub)();
     (*pvar_func_asynRegister)();
@@ -493,6 +508,10 @@ int GreenHouse_registerRecordDeviceDriver(DBBASE *pbase)
     (*pvar_func_asynInterposeEosRegister)();
     (*pvar_func_streamRegistrar)();
     (*pvar_func_drvAsynSerialPortRegisterCommands)();
+    (*pvar_func_save_restoreRegister)();
+    (*pvar_func_dbrestoreRegister)();
+    (*pvar_func_asInitHooksRegister)();
+    (*pvar_func_configMenuRegistrar)();
     iocshRegisterVariable(vardefs);
     return 0;
 }

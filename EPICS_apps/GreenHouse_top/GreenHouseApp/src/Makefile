@@ -14,16 +14,16 @@ DBD += GreenHouse.dbd
 
 # GreenHouse.dbd will be made up from these files:
 GreenHouse_DBD += base.dbd
+
+# Include dbd files from all support applications:
 GreenHouse_DBD += asyn.dbd
 GreenHouse_DBD += stream.dbd
 GreenHouse_DBD += drvAsynSerialPort.dbd
-#GreenHouse_DBD += base.dbd
-
-# Include dbd files from all support applications:
+GreenHouse_DBD += asSupport.dbd
 #GreenHouse_DBD += xxx.dbd
 
 # Add all the support libraries needed by this IOC
-#GreenHouse_LIBS += xxx
+GreenHouse_LIBS += autosave
 
 # GreenHouse_registerRecordDeviceDriver.cpp derives from GreenHouse.dbd
 GreenHouse_SRCS += GreenHouse_registerRecordDeviceDriver.cpp

@@ -180,11 +180,6 @@ menu(menuAlarmSevr) {
 	choice(menuAlarmSevrMAJOR,"MAJOR")
 	choice(menuAlarmSevrINVALID,"INVALID")
 }
-menu(ipDRTO) {
-	choice(ipDRTO_unknown,"Unknown")
-	choice(ipDRTO_No,"No")
-	choice(ipDRTO_Yes,"Yes")
-}
 menu(gpibUCMD) {
 	choice(gpibUCMD_None,"None")
 	choice(gpibUCMD_Device_Clear__DCL_,"Device Clear (DCL)")
@@ -14222,21 +14217,6 @@ recordtype(asyn) {
 		menu(serialIX)
 		interest(2)
 	}
-	field(HOSTINFO,DBF_STRING) {
-		prompt("host info")
-		initial("")
-		promptgroup(GUI_INPUTS)
-		special(100)
-		size(40)
-		interest(1)
-	}
-	field(DRTO,DBF_MENU) {
-		prompt("Disconnect on timeout")
-		promptgroup(GUI_INPUTS)
-		special(100)
-		menu(ipDRTO)
-		interest(2)
-	}
 	field(UCMD,DBF_MENU) {
 		prompt("Universal command")
 		promptgroup(GUI_OUTPUT)
@@ -14494,7 +14474,6 @@ device(waveform,INST_IO,asynWfOctetCmdResponse,"asynOctetCmdResponse")
 device(waveform,INST_IO,asynWfOctetWriteRead,"asynOctetWriteRead")
 device(waveform,INST_IO,asynWfOctetRead,"asynOctetRead")
 device(waveform,INST_IO,asynWfOctetWrite,"asynOctetWrite")
-device(waveform,INST_IO,asynWfOctetWriteBinary,"asynOctetWriteBinary")
 device(waveform,INST_IO,asynInt8ArrayWfIn,"asynInt8ArrayIn")
 device(waveform,INST_IO,asynInt8ArrayWfOut,"asynInt8ArrayOut")
 device(waveform,INST_IO,asynInt16ArrayWfIn,"asynInt16ArrayIn")
@@ -14517,8 +14496,19 @@ registrar(asynInterposeFlushRegister)
 registrar(asynInterposeEosRegister)
 registrar(streamRegistrar)
 registrar(drvAsynSerialPortRegisterCommands)
+registrar(save_restoreRegister)
+registrar(dbrestoreRegister)
+registrar(asInitHooksRegister)
+registrar(configMenuRegistrar)
 variable(asCaDebug,int)
 variable(dbRecordsOnceOnly,int)
 variable(dbBptNotMonotonic,int)
 variable(dbTemplateMaxVars,int)
 variable(streamDebug,int)
+variable(save_restoreDebug,int)
+variable(save_restoreNumSeqFiles,int)
+variable(save_restoreSeqPeriodInSeconds,int)
+variable(save_restoreIncompleteSetsOk,int)
+variable(save_restoreDatedBackupFiles,int)
+variable(save_restoreRemountThreshold,int)
+variable(configMenuDebug,int)
