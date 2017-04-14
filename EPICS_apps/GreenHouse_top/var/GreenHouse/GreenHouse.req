@@ -11,6 +11,5 @@ miHost:Apperture.VAL
 miHost:Apperture.LOW
 miHost:Fan.VAL
 miHost:Fan.LOW
-miHost:TempSetpoint.VAL
 miHost:currentDLI.VAL
 miHost:ExpString.VAL

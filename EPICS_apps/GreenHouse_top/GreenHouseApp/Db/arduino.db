@@ -5,8 +5,8 @@
 #
 #
 # used fields description:
-#	DTYP - Device Type
-# INP/OUT - Where to read/write
+#	DTYP - Device Type can be :
+# INP/OUT - Where to read/write. It can also be a constant in that can specify DTYP as Soft (specified by defaut)
 # DESC - Variable description
 # PREC - Display Precision e.g: 1 shows 1 decimal precision
 # SCAN - Periodicity to update VAL
@@ -28,10 +28,14 @@
 # ASLO & AOFF - Specify the Slope and offset Changing the pv VAL field according to:
 #								VAL = VAL*ASLO + AOFF
 
-# Specific for bi record
+# Specific records for:
+
+# bi record
 # ZSV; OSV; COSV - Zero Severity, One Severity; Change of State Severity.
 #									The possible values for these fields are NO ALARM, MINOR, and MAJOR.
-#
+
+#ao record
+# DOL - Desired output Link: The value where that the ao value will take if in closed_loop mode
 #################################################
 #		AI - Analog Input
 #################################################
@@ -134,21 +138,25 @@ record(ai,	"$(user):LAI_1") {
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant1 area in pixels")
 	field(EGU, "pixels")
+	field(PINI,	"YES")
 }
 record(ai,	"$(user):LAI_2") {
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant2 area in pixels")
 	field(EGU, "pixels")
+	field(PINI,	"YES")
 }
 record(ai,	"$(user):LAI_3") {
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant3 area in pixels")
 	field(EGU, "pixels")
+	field(PINI,"YES")
 }
 record(ai,	"$(user):LAI_4") {
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant4 area in pixels")
 	field(EGU, "pixels")
+	field(PINI,"YES")
 }
 
 
@@ -195,12 +203,13 @@ record(ao, $(user):Fan) {
 	field(PINI, "YES")
 
 	#Set PID link
-		field(DOL, "$(user):FanPID")
-		field(OMSL,"closed_loop")
+	field(DOL, "$(user):FanPID")
+	field(OMSL,"closed_loop")
 }
 
+# Water Pump 1
 record(bo, $(user):RELE1) {
-	field(DESC, "Bo for RELE1")
+	field(DESC, "Water pump1")
 	field(DTYP, "stream")
 	field(OUT, "@arduino.proto setRELE1() $(PORT)")
 	field(PINI, "YES")
@@ -257,6 +266,7 @@ record(ai, "$(user):DLI"){
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC, "Daily light Integral (mol.m-2.day-1)")
 	field(ADEL,	"1")
+	field(PINI,	"YES")
 }
 
 record(stringin,"$(user):clock") {
@@ -331,11 +341,12 @@ record(calc, "$(user):FanPID")
 ###################################
 record(ao, "$(user):TempSetpoint"){
 	info(autosaveFields, "VAL")		#autosave
-	field(SCAN, "2 second")
+	field(DTYP, "Soft")	#this is done by default
+	#field(SCAN, "2 second")
+	field(INP, "20")
 	field(DRVH, "40")
 	field(DRVL, "10")
-	field(DOL, "20")
-	field(PINI, "YES")
+	field(PINI,	"YES")
 }
 
 #############################
@@ -345,6 +356,7 @@ record(stringin , "$(user):ExpString"){
 	info(autosaveFields, "VAL")		#autosave
 	field(VAL, "no experience")
 	field(DESC, "anotar estados da experiencia")
+	field(PINI,"YES")
 }
 
 #################

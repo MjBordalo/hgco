@@ -5,8 +5,8 @@
 #
 #
 # used fields description:
-#	DTYP - Device Type
-# INP/OUT - Where to read/write
+#	DTYP - Device Type can be :
+# INP/OUT - Where to read/write. It can also be a constant in that can specify DTYP as Soft (specified by defaut)
 # DESC - Variable description
 # PREC - Display Precision e.g: 1 shows 1 decimal precision
 # SCAN - Periodicity to update VAL
@@ -134,21 +134,25 @@ record(ai,	"$(user):LAI_1") {
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant1 area in pixels")
 	field(EGU, "pixels")
+	field(PINI,	"YES")
 }
 record(ai,	"$(user):LAI_2") {
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant2 area in pixels")
 	field(EGU, "pixels")
+	field(PINI,	"YES")
 }
 record(ai,	"$(user):LAI_3") {
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant3 area in pixels")
 	field(EGU, "pixels")
+	field(PINI,"YES")
 }
 record(ai,	"$(user):LAI_4") {
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC,	"Plant4 area in pixels")
 	field(EGU, "pixels")
+	field(PINI,"YES")
 }
 
 
@@ -257,6 +261,7 @@ record(ai, "$(user):DLI"){
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC, "Daily light Integral (mol.m-2.day-1)")
 	field(ADEL,	"1")
+	field(PINI,	"YES")
 }
 
 record(stringin,"$(user):clock") {
@@ -330,12 +335,13 @@ record(calc, "$(user):FanPID")
 # Setpoints
 ###################################
 record(ao, "$(user):TempSetpoint"){
-	info(autosaveFields, "VAL")		#autosave
+	#info(autosaveFields, "VAL")		#autosave
+	field(DTYP, "Soft")	#this is done by default
 	field(SCAN, "2 second")
 	field(DRVH, "40")
 	field(DRVL, "10")
-	field(DOL, "20")
-	field(PINI, "YES")
+	field(INP, "20")
+
 }
 
 #############################
@@ -345,6 +351,7 @@ record(stringin , "$(user):ExpString"){
 	info(autosaveFields, "VAL")		#autosave
 	field(VAL, "no experience")
 	field(DESC, "anotar estados da experiencia")
+	field(PINI,"YES")
 }
 
 #################
