@@ -1,15 +1,8 @@
 miHost:DLI.VAL
-miHost:Hum1.VAL
-miHost:Hum1.LOW
 miHost:LAI_1.VAL
 miHost:LAI_2.VAL
 miHost:LAI_3.VAL
 miHost:LAI_4.VAL
-miHost:Temp1.VAL
-miHost:Temp1.LOW
-miHost:Apperture.VAL
-miHost:Apperture.LOW
-miHost:Fan.VAL
-miHost:Fan.LOW
+miHost:TempSetpoint.VAL
 miHost:currentDLI.VAL
 miHost:ExpString.VAL

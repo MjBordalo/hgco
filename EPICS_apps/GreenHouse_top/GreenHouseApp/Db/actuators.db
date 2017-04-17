@@ -1,0 +1,118 @@
+# author: Miguel Bordalo
+#
+# This document describes all the PV comming from Arduino sensors and actuators
+#
+#
+#
+# used fields description:
+#	DTYP - Device Type can be :
+# INP/OUT - Where to read/write. It can also be a constant in that can specify DTYP as Soft (specified by defaut)
+# DESC - Variable description
+# PREC - Display Precision e.g: 1 shows 1 decimal precision
+# SCAN - Periodicity to update VAL
+# LOPR / HOPR - Low/High Operating Range
+# ADEL - Archive Deadband
+# PINI - Process at Initialization
+# EGU - Engineering units name
+# LOLO, LOW, HIGH, HIHI - Alarm Limits
+# LLSV, LSV, HSV, HHSV - Alarm Associated severities
+# OMSL -	Output Mode Select can be closed_loop or supervisory
+#         If supervisory is specified, the value in the VAL field can be set
+#					externally via dbPuts at run-time. If closed_loop is specified, the
+#					VAL field's value is obtained from the address specified in the
+#					desired output location field (DOL)
+# OIF -  Incremental or Full
+#					decides whether the value obtained from DOL is an increment to be
+#					added to the current VAL or if the value obtained from DOL is the
+#					actual value.
+# ASLO & AOFF - Specify the Slope and offset Changing the pv VAL field according to:
+#								VAL = VAL*ASLO + AOFF
+
+# Specific records for:
+
+# bi record
+# ZSV; OSV; COSV - Zero Severity, One Severity; Change of State Severity.
+#									The possible values for these fields are NO ALARM, MINOR, and MAJOR.
+
+#ao record
+# DOL - Desired output Link: The value where that the ao value will take if in closed_loop mode
+#################################################
+#		AO - Analog Output
+#################################################
+
+record(ao, $(user):Apperture) {
+   	field(DESC, "Servo motor set variable")
+    	field(DTYP, "stream")
+    	field(OUT, "@arduino.proto setServo() $(PORT)")
+	field(PINI,	"YES")
+    	field(DRVL, "0")
+    	field(DRVH, "170")
+	field(LOPR, "-5")
+	field(HOPR, "180")	#High Operating Range
+	field(ADEL, "1")
+	field(EGU, "servo angle")
+	field(SCAN, "2 second")
+
+
+		#Set PID link
+		field(DOL, "$(user):TempPID")
+		field(OMSL,"closed_loop")
+
+		# When PID is INVALID, go back to 0
+		field(IVOA, "Set output to IVOV")
+		field(IVOV, "1")
+}
+
+record(ao, $(user):Fan) {
+    	field(DESC, "2Wire Fan")
+    	field(DTYP, "stream")
+    	field(OUT, "@arduino.proto setFan() $(PORT)")
+    	field(DRVL, "0")
+    	field(DRVH, "255")
+	field(LOPR, "0")
+	field(HOPR, "255")	#High Operating Range
+	field(ADEL, "10")
+	field(EGU, "dutycycle")
+	field(SCAN, "2 second")
+	field(PINI, "YES")
+
+	#Set PID link
+	field(DOL, "$(user):FanPID")
+	field(OMSL,"closed_loop")
+}
+
+
+record(bo, $(user):RELE1) {
+	field(DESC, "Water pump1")
+	field(DTYP, "stream")
+	field(OUT, "@arduino.proto setRELE1() $(PORT)")
+	field(PINI, "YES")
+	field(ONAM,	"ON")
+	field(ZNAM,	"OFF")
+}
+record(bo, $(user):RELE2) {
+	field(DESC, "Bo for RELE2")
+	field(DTYP, "stream")
+	field(OUT, "@arduino.proto setRELE2() $(PORT)")
+	field(PINI, "YES")
+	field(ONAM,	"ON")
+	field(ZNAM,	"OFF")
+}
+record(bo, $(user):RELE3) {
+	field(DESC, "Bo for RELE3")
+	field(DTYP, "stream")
+	field(OUT, "@arduino.proto setRELE3() $(PORT)")
+	field(PINI, "YES")
+	field(ONAM,	"ON")
+	field(ZNAM,	"OFF")
+}
+# Water Pump 1
+record(bo, $(user):WaterPump1) {
+	field(DESC, "Bo for Water Pump connected to RELE4")
+	field(DTYP, "stream")
+	field(OUT, "@arduino.proto setRELE4() $(PORT)")
+	field(PINI, "YES")
+	field(ONAM,	"OFF")
+	field(ZNAM,	"ON")
+	field(OSV,	"MAJOR") #one severity
+}

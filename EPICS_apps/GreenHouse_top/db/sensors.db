@@ -6,7 +6,8 @@
 #
 # used fields description:
 #	DTYP - Device Type can be :
-# INP/OUT - Where to read/write. It can also be a constant in that can specify DTYP as Soft (specified by defaut)
+# INP/OUT - Where to read/write. It can also be a constant in that case specify
+#						DTYP as Soft Channel(specified by defaut)
 # DESC - Variable description
 # PREC - Display Precision e.g: 1 shows 1 decimal precision
 # SCAN - Periodicity to update VAL
@@ -43,7 +44,6 @@
 
 #Temperature of first DHT22 Sensor
 record(ai, "$(user):Temp1"){
-	info(autosaveFields, "VAL LOW")
 	field(DTYP, "stream")
 	field(INP, "@arduino.proto getTemp1() $(PORT)")
 	field(DESC, "Inside Temperature")
@@ -64,7 +64,6 @@ record(ai, "$(user):Temp1"){
 }
 
 record(ai, "$(user):Hum1"){
-	info(autosaveFields, "VAL LOW")
 	field(DTYP, "stream")
 	field(INP, "@arduino.proto getHum1() $(PORT)")
 	field(DESC, "Inside Humidity (sensor1)")
@@ -78,6 +77,14 @@ record(ai, "$(user):Hum1"){
 	#once the .RVAL field is empty
 	field(ASLO, "0.992")	#linear slope calibration
 	field(AOFF, "5.886")	#linear slope offset
+
+	#Alarms
+	field(LOLO, "40")
+	field(LOW, "60")
+	field(HIGH, "70")
+	field(HIHI, "90")
+	field(LSV, "MINOR")
+	field(HSV, "MINOR")
 }
 
 
@@ -165,7 +172,6 @@ record(ai,	"$(user):LAI_4") {
 #################################################
 
 record(ao, $(user):Apperture) {
-	 info(autosaveFields, "VAL LOW")
    	field(DESC, "Servo motor set variable")
     	field(DTYP, "stream")
     	field(OUT, "@arduino.proto setServo() $(PORT)")
@@ -189,7 +195,6 @@ record(ao, $(user):Apperture) {
 }
 
 record(ao, $(user):Fan) {
-	info(autosaveFields, "VAL LOW")
     	field(DESC, "2Wire Fan")
     	field(DTYP, "stream")
     	field(OUT, "@arduino.proto setFan() $(PORT)")
@@ -241,128 +246,3 @@ record(bo, $(user):RELE4) {
 	field(ONAM,	"ON")
 	field(ZNAM,	"OFF")
 }
-
-#################################################
-#		Calc - Variables based on calculations
-#################################################
-record(calc, "$(user):currentDLI"){
-	info(autosaveFields, "VAL")		#autosave
-	field(DESC, "current integrated Daily light Integral")
-
-	field(INPA, "$(user):Lum1")
-	field(INPB, "$(user):currentDLI")
-	field(CALC, "A*1e-6+B")
-
-	field(SCAN, "1 second")
-	field(EGU, "DLI")
-	#field(PREC, "6")
-	#field(ADEL, "10")
-
-	field(LOPR, "0")
-	field(HOPR, "1000")	#High Operating Range
-}
-
-record(ai, "$(user):DLI"){
-	info(autosaveFields, "VAL")		#autosave
-	field(DESC, "Daily light Integral (mol.m-2.day-1)")
-	field(ADEL,	"1")
-	field(PINI,	"YES")
-}
-
-record(stringin,"$(user):clock") {
-  field(DTYP,"Soft Timestamp")
-  field(INP,"@%H%M%S")
-  field(SCAN,"5 second")
-  field(FLNK,"$(user):check")
-}
-record(calcout,"$(user):check") {
-  field(INPA,"$(user):clock")
-#  field(CALC,"A>235950?1:0")
-  field(CALC,"A>045950?0:1")
-  field(OOPT,"Transition To Zero")
-  field(OUT,"$(user):do_reset PP")
-}
-record(seq,"$(user):do_reset") {
-    field(DESC, "seq do_reset test")
-    field(SELM, "All")
-    field(DLY1, "0")
-    field(DOL1, "$(user):currentDLI")
-    field(LNK1, "$(user):DLI.VAL PP NMS")
-    field(DLY2, "1")
-    field(DOL2, "0")
-    field(LNK2, "$(user):currentDLI.VAL")
-}
-
-# Error computation’ s SCAN drives the rest
-record(calc, "$(user):TempError")
-{
-		field(DESC, "Temperature Error")
-		field(SCAN, "2 second")
-		field(INPA, "$(user):Temp1")
-		field(INPB, "$(user):TempSetpoint")
-		field(CALC, "A-B")
-		field(PREC, "1")
-}
-
-# Proportional Feedback signal
-# u = Kp*TempError
-# TempError = Temp1- TempSetpoint
-record(calc, "$(user):TempPID")
-{
-		field(DESC, "GreenHouse Temp PID")
-		field(PREC, "0")
-		field(SCAN, "2 second")
-
-		field(LOPR, "0")			#<--- Isto faz alguma coisa aqui?
-		field(HOPR, "170")
-		field(INPA, "60")			#Kp
-		field(INPB, "$(user):TempError")
-		field(CALC, "A*B")
-}
-# Proportional Feedback signal
-# u = Kp*TempError
-# TempError = Temp1- TempSetpoint
-record(calc, "$(user):FanPID")
-{
-		field(DESC, "GreenHouse Temp PID")
-		field(PREC, "0")
-		field(SCAN, "2 second")
-
-		field(LOPR, "15")
-		field(HOPR, "255")
-		field(INPA, "40")			#Kp
-		field(INPB, "$(user):TempError")
-		field(CALC, "A*B > 15 ? A*B: 15")
-		field(FLNK,	"miHost:Fan PP")
-}
-
-###################################
-# Setpoints
-###################################
-record(ao, "$(user):TempSetpoint"){
-	info(autosaveFields, "VAL")		#autosave
-	field(DTYP, "Soft")	#this is done by default
-	#field(SCAN, "2 second")
-	field(INP, "20")
-	field(DRVH, "40")
-	field(DRVL, "10")
-	field(PINI,	"YES")
-}
-
-#############################
-#   Debug
-#############################
-record(stringin , "$(user):ExpString"){
-	info(autosaveFields, "VAL")		#autosave
-	field(VAL, "no experience")
-	field(DESC, "anotar estados da experiencia")
-	field(PINI,"YES")
-}
-
-#################
-# Pi
-#############
-#record (stringin, $(user):PiTemp {
-#    field (DTYP, "stream")
-#    field (INP,  "@arduino.proto getPiTemp() $(PORT)")
-#}

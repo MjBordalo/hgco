@@ -10,7 +10,9 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------------------
 # Create and install (or just install) into <top>/db
 # databases, templates, substitutions like this
-DB += arduino.db
+DB += sensors.db
+DB += actuators.db
+DB += control.db
 #DB += example.db
 
 #----------------------------------------------------

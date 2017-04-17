@@ -1,0 +1,19 @@
+site_name: HGCO
+site_description: Hydroponic GreenHouse Crop Optimization
+site_author: Miguel Bordalo
+repo_url: https://github.com/MjBordalo/hgco
+
+pages:
+  - Home: index.md
+  - Documentation:
+    - 'EPICS':
+      - 'Archiver': epics-archive.md
+    - 'Linux': linux.md
+      -'Screen': screen.md
+
+
+
+
+markdown_extensions:
+  - toc:
+      permalink: True

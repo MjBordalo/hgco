@@ -1,17 +1,10 @@
-# autosave R5.3	Automatically generated - DO NOT MODIFY - 170414-191938
-miHost:DLI.VAL 6
-miHost:Hum1.VAL 38.5228
-miHost:Hum1.LOW 0
+# autosave R5.3	Automatically generated - DO NOT MODIFY - 170417-154508
+miHost:DLI.VAL 9.2647228462805
 miHost:LAI_1.VAL 62665
 miHost:LAI_2.VAL 3
 miHost:LAI_3.VAL 0
 miHost:LAI_4.VAL 0
-miHost:Temp1.VAL 28
-miHost:Temp1.LOW 15
-miHost:Apperture.VAL 170
-miHost:Apperture.LOW 0
-miHost:Fan.VAL 255
-miHost:Fan.LOW 0
-miHost:currentDLI.VAL 6.4187115247199
+miHost:TempSetpoint.VAL 20
+miHost:currentDLI.VAL 4.1546250543601
 miHost:ExpString.VAL outroteste6
 <END>

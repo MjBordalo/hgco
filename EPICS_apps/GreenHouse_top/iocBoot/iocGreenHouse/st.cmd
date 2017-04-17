@@ -42,7 +42,9 @@ asynSetOption("USB0",-1,"clocal","Y")
 asynSetOption("USB0",-1,"crtscts","N")
 
 ## Load record instances
-dbLoadRecords("db/arduino.db","user=miHost,PORT=USB0")
+dbLoadRecords("db/sensors.db","user=miHost,PORT=USB0")
+dbLoadRecords("db/actuators.db","user=miHost,PORT=USB0")
+dbLoadRecords("db/control.db","user=miHost,PORT=USB0")
 
 cd ${AUTOSAVE}/asApp/Db
 dbLoadRecords("save_restoreStatus.db","P=miHostAS:")
@@ -50,7 +52,7 @@ dbLoadRecords("save_restoreStatus.db","P=miHostAS:")
 cd "${TOP}/iocBoot/${IOC}"
 iocInit
 
-#Autosave 
+#Autosave
 # Create request file and start periodic 'save’
 makeAutosaveFileFromDbInfo("$(SAVE_DIR)/$(IOCNAME).req", "autosaveFields")
 create_monitor_set("$(IOCNAME).req", 30)
