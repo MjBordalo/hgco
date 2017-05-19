@@ -1,10 +1,10 @@
-# autosave R5.3	Automatically generated - DO NOT MODIFY - 170417-155510
-miHost:DLI.VAL 9.2647228462805
-miHost:LAI_1.VAL 62665
-miHost:LAI_2.VAL 3
-miHost:LAI_3.VAL 0
-miHost:LAI_4.VAL 0
-miHost:TempSetpoint.VAL 20
-miHost:currentDLI.VAL 4.4777718031201
-miHost:ExpString.VAL outroteste6
+# autosave R5.3	Automatically generated - DO NOT MODIFY - 170519-092543
+miHost:DLI.VAL 7.4843781936001
+miHost:LAI_1.VAL 472646
+miHost:LAI_2.VAL 2849
+miHost:LAI_3.VAL 231236
+miHost:LAI_4.VAL 175021
+miHost:TempSetpoint.VAL 25
+miHost:currentDLI.VAL 0.61801209624
+miHost:ExpString.VAL no experience
 <END>

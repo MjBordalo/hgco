@@ -9,7 +9,7 @@ pages:
     - 'EPICS':
       - 'Archiver': epics-archive.md
     - 'Linux': linux.md
-      -'Screen': screen.md
+      - 'Screen': screen.md
 
 
 

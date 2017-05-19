@@ -41,18 +41,23 @@
 #################################################
 
 record(ao, $(user):Apperture) {
-   	field(DESC, "Servo motor set variable")
+    field(DESC, "Servo motor set variable")
     	field(DTYP, "stream")
     	field(OUT, "@arduino.proto setServo() $(PORT)")
 	field(PINI,	"YES")
     	field(DRVL, "0")
-    	field(DRVH, "170")
+    	field(DRVH, "4") #window angle
 	field(LOPR, "-5")
 	field(HOPR, "180")	#High Operating Range
-	field(ADEL, "1")
-	field(EGU, "servo angle")
+	field(ADEL, "0.1")
+	field(EGU, "window angle")
 	field(SCAN, "2 second")
 
+    #linear calibration
+  	#in this case because this PV is read from a float we cannot use the field LINR
+  	#once the .RVAL field is empty
+  	field(ASLO, "0.036")	#linear slope calibration
+  	#field(AOFF, "-1.215")	#linear slope offset
 
 		#Set PID link
 		field(DOL, "$(user):TempPID")
@@ -68,13 +73,16 @@ record(ao, $(user):Fan) {
     	field(DTYP, "stream")
     	field(OUT, "@arduino.proto setFan() $(PORT)")
     	field(DRVL, "0")
-    	field(DRVH, "255")
+    	field(DRVH, "100")
 	field(LOPR, "0")
-	field(HOPR, "255")	#High Operating Range
-	field(ADEL, "10")
+	field(HOPR, "100")	#High Operating Range
+	field(ADEL, "1")
 	field(EGU, "dutycycle")
 	field(SCAN, "2 second")
 	field(PINI, "YES")
+
+
+  field(ASLO, "0.392156")	#linear slope calibration m=100/255
 
 	#Set PID link
 	field(DOL, "$(user):FanPID")

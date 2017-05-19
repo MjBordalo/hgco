@@ -1,66 +1,17 @@
 # author: Miguel Bordalo
 #
-# This document describes all the PV comming from Arduino sensors and actuators
+# This document presents the PV in order to control the greenhouse Temperature
 #
+
 
 #################################################
 #		Calc - Variables based on calculations
 #################################################
-record(calc, "$(user):currentDLI"){
-	info(autosaveFields, "VAL")		#autosave
-	field(DESC, "current integrated Daily light Integral")
-
-	field(INPA, "$(user):Lum1")
-	field(INPB, "$(user):currentDLI")
-	field(CALC, "A*1e-6+B")
-
-	field(SCAN, "1 second")
-	field(EGU, "DLI")
-	#field(PREC, "6")
-	#field(ADEL, "10")
-
-	field(LOPR, "0")
-	field(HOPR, "1000")	#High Operating Range
-	field(PREC,	"1")
-}
-
-record(ai, "$(user):DLI"){
-	info(autosaveFields, "VAL")		#autosave
-	field(DESC, "Daily light Integral (mol.m-2.day-1)")
-	field(ADEL,	"1")
-	field(PINI,	"YES")
-	field(PREC,	"1")
-}
-
-record(stringin,"$(user):clock") {
-  field(DTYP,"Soft Timestamp")
-  field(INP,"@%H%M%S")
-  field(SCAN,"5 second")
-  field(FLNK,"$(user):check")
-}
-record(calcout,"$(user):check") {
-  field(INPA,"$(user):clock")
-#  field(CALC,"A>235950?1:0")
-  field(CALC,"A>045950?0:1")
-  field(OOPT,"Transition To Zero")
-  field(OUT,"$(user):do_reset PP")
-}
-record(seq,"$(user):do_reset") {
-    field(DESC, "seq do_reset test")
-    field(SELM, "All")
-    field(DLY1, "0")
-    field(DOL1, "$(user):currentDLI")
-    field(LNK1, "$(user):DLI.VAL PP NMS")
-    field(DLY2, "1")
-    field(DOL2, "0")
-    field(LNK2, "$(user):currentDLI.VAL")
-}
-
 # Error computation’ s SCAN drives the rest
 record(calc, "$(user):TempError")
 {
 		field(DESC, "Temperature Error")
-		field(SCAN, "2 second")
+		field(SCAN, "60 second")
 		field(INPA, "$(user):Temp1")
 		field(INPB, "$(user):TempSetpoint")
 		field(CALC, "A-B")

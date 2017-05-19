@@ -56,6 +56,7 @@ def main():
     # night we check that the image isn't mostly dark (0=black, 255=white).
     # if it is a night image it throws a fatal error and stops the pipeline.
     if np.average(img) < 50:
+        os.remove(path +"/"+filename)
         pcv.fatal_error("Night Image")
     else:
         pass
@@ -70,8 +71,8 @@ def main():
     # otherwise (x position, y position, box width, box height)
 
     #white balance image based on white toughspot
-    device,img1=pcv.white_balance(device,img,debug,roi=(2080,250,50,50))
-
+    #device,img1=pcv.white_balance(device,img,debug,roi=(1450,450,50,50))
+    device,img1=pcv.white_balance(device,img,debug,None)
     # Step 3: Rotate the image
     device+=1;
     #device, rotate_img = pcv.rotate_img(img1, -4, device, debug)
@@ -109,10 +110,11 @@ def main():
     #                  - If object is dark then inverse thresholding is done
     #    device      = device number. Used to count steps in the pipeline
     #    debug       = None, print, or plot. Print = save to file, Plot = print to screen.
-    device, img_binary = pcv.binary_threshold(a, 120, 255, 'dark', device, debug)
+    device, img_binary = pcv.binary_threshold(a, 121, 255, 'dark', device, debug)
     #                                            ^
     #                                            |
     #                                           adjust this value
+    #ao aumentar o valor: deixa passar mais informacao para branco
 
 
     # STEP 7: Fill in small objects (speckles)
@@ -123,11 +125,11 @@ def main():
     #    device = device number. Used to count steps in the pipeline
     #    debug  = None, print, or plot. Print = save to file, Plot = print to screen.
     mask = np.copy(img_binary)
-    device, fill_image = pcv.fill(img_binary, mask, 100, device, debug)
+    device, fill_image = pcv.fill(img_binary, mask, 110, device, debug)
     #                                               ^
     #                                               |
     #                                               adjust this value
-
+    #ao aumentar o valor: tapa mais os burcas
 
     # STEP 8: Dilate so that you don't lose leaves (just in case)
     # Inputs:
@@ -219,70 +221,88 @@ def main():
 
 
     splitedfilename = filename.split(".")
-    longfilename=  path + "/" + out + "/" + splitedfilename[0] + "_3_p3.jpg"
-    print "Analyzing: " +longfilename
+    for i in range(0,4):
+        longfilename =  path + "/" + out + "/" + splitedfilename[0] + "_" + str(i) +"_p"+ str(i)+ ".jpg"
+        #print "path " + path
+        #print "out: " +out
+        #print "splitedfilename[0] " + splitedfilename[0]
+        print "Analyzing: " + longfilename
 
 
-    # Read image
-    img1, path, filename = pcv.readimage( longfilename)
+        # Read image
+        img1, path2, filename = pcv.readimage( longfilename)
 
-    # # Convert RGB to HSV and extract the Saturation channel
-    device, s = pcv.rgb2gray_hsv(img1, 's', device, debug)
-    # # Threshold the Saturation image
-    device, s_thresh = pcv.binary_threshold(s, 85, 255, 'light', device, debug)
+        # # Convert RGB to HSV and extract the Saturation channel
+        #Step 17
+        device, s = pcv.rgb2gray_hsv(img1, 's', device, debug)
+        #device, s = pcv.rgb2gray_lab(img1, 'a', device, debug)
 
-    # Identify objects
-    device, id_objects,obj_hierarchy = pcv.find_objects(img1, s_thresh, device, debug)
+        #Step 18
+        # # Threshold the Saturation image
+        device, s_thresh = pcv.binary_threshold(s, 80, 255, 'light', device, debug)
+        #device, s_thresh = pcv.binary_threshold(s, 120, 255, 'light', device, debug)
+        #Mais baixo fica com mais branco
 
-     # Define ROI
-    device, roi1, roi_hierarchy= pcv.define_roi(s_thresh, 'rectangle', device, None, 'default', debug, False, 0, 0, 0, 0)
+        #Step 19
+        # Identify objects
+        #device, id_objects,obj_hierarchy = pcv.find_objects(img1, s_thresh, device, debug)
+        device, id_objects,obj_hierarchy = pcv.find_objects(img1, s_thresh, device, None)
 
-    # Decide which objects to keep
-    device,roi_objects, hierarchy3, kept_mask, obj_area = pcv.roi_objects(img1, 'partial', roi1, roi_hierarchy, id_objects, obj_hierarchy, device, debug)
+        #Step 20
+         # Define ROI
+        #device, roi1, roi_hierarchy= pcv.define_roi(s_thresh, 'rectangle', device, None, 'default', debug, False, 0, 0, 0, 0)
+        device, roi1, roi_hierarchy= pcv.define_roi(s_thresh, 'rectangle', device, None, 'default', None, False, 0, 0, 0, 0)
 
-    # Object combine kept objects
-    device, obj, mask = pcv.object_composition(img1, roi_objects, hierarchy3, device, debug)
+        #Step 21
+        # Decide which objects to keep
+        #device,roi_objects, hierarchy3, kept_mask, obj_area = pcv.roi_objects(img1, 'partial', roi1, roi_hierarchy, id_objects, obj_hierarchy, device, debug)
+        device,roi_objects, hierarchy3, kept_mask, obj_area = pcv.roi_objects(img1, 'partial', roi1, roi_hierarchy, id_objects, obj_hierarchy, device, None)
 
-    outfile=False
-    if args.writeimg==True:
-        outfile=args.outdir+"/"+filename
+        #Step 22
+        # Object combine kept objects
+        device, obj, mask = pcv.object_composition(img1, roi_objects, hierarchy3, device, debug)
 
-    # Find shape properties, output shape image (optional)
-    device, shape_header, shape_data, shape_img = pcv.analyze_object(img1, args.image, obj, mask, device, debug, outfile)
+        outfile=False
+        #if args.writeimg==True:
+        #    outfile=args.outdir+"/"+filename
 
-    # Shape properties relative to user boundary line (optional)
-    device, boundary_header, boundary_data, boundary_img1 = pcv.analyze_bound(img1, args.image, obj, mask, 1680, device, debug, args.outdir + '/' + filename)
+        # Find shape properties, output shape image (optional)
+        device, shape_header, shape_data, shape_img = pcv.analyze_object(img1, args.image, obj, mask, device, debug, outfile)
 
-    # Determine color properties: Histograms, Color Slices and Pseudocolored Images, output color analyzed images (optional)
-    device, color_header, color_data, color_img = pcv.analyze_color(img1, args.image, kept_mask, 256, device, debug, 'all', 'v', 'img', 300, args.outdir + '/' + filename)
+        # Shape properties relative to user boundary line (optional)
+        device, boundary_header, boundary_data, boundary_img1 = pcv.analyze_bound(img1, args.image, obj, mask, 1680, device, debug, args.outdir + '/' + filename)
 
-    # Write shape and color data to results file
-    result=open(args.result,"w")
-    result.write('\t'.join(map(str,shape_header)))
-    result.write("\n")
-    result.write('\t'.join(map(str,shape_data)))
-    result.write("\n")
-    for row in shape_img:
-        result.write('\t'.join(map(str,row)))
+        # Determine color properties: Histograms, Color Slices and Pseudocolored Images, output color analyzed images (optional)
+        device, color_header, color_data, color_img = pcv.analyze_color(img1, args.image, kept_mask, 256, device, debug, 'all', 'v', 'img', 300, args.outdir + '/' + filename)
+
+        # Write shape and color data to results file
+        result=open(splitedfilename[0] +"_results_"+str(i+1),"w")
+        result.write('\t'.join(map(str,shape_header)))
         result.write("\n")
-    result.write('\t'.join(map(str,color_header)))
-    result.write("\n")
-    result.write('\t'.join(map(str,color_data)))
-    result.write("\n")
-    for row in color_img:
-        result.write('\t'.join(map(str,row)))
+        result.write('\t'.join(map(str,shape_data)))
         result.write("\n")
-    result.close()
+        for row in shape_img:
+            result.write('\t'.join(map(str,row)))
+            result.write("\n")
+        result.write('\t'.join(map(str,color_header)))
+        result.write("\n")
+        result.write('\t'.join(map(str,color_data)))
+        result.write("\n")
+        for row in color_img:
+            result.write('\t'.join(map(str,row)))
+            result.write("\n")
+        result.close()
 
 
-    #Put area info into epics
-    try:
-        chan = CaChannel('miHost:LAI_1')
-        chan.searchw()
-        print "Put: " + str(shape_data[1]) + " into miHost:LAI_1"
-        chan.putw(shape_data[1])
-        chan.getw()
-    except CaChannelException as e:
-        print(e)
+        #Put area info into epics
+        try:
+            chan = CaChannel('miHost:LAI_'+str(i+1))
+            chan.searchw()
+            print "Put: " + str(shape_data[1]) + " into miHost:LAI_"+str(i+1)
+            chan.putw(shape_data[1])
+            chan.getw()
+        except CaChannelException as e:
+            print(e)
+
 if __name__ == '__main__':
     main()

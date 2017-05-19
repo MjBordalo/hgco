@@ -4,39 +4,6 @@
 #
 #
 #
-# used fields description:
-#	DTYP - Device Type can be :
-# INP/OUT - Where to read/write. It can also be a constant in that case specify
-#						DTYP as Soft Channel(specified by defaut)
-# DESC - Variable description
-# PREC - Display Precision e.g: 1 shows 1 decimal precision
-# SCAN - Periodicity to update VAL
-# LOPR / HOPR - Low/High Operating Range
-# ADEL - Archive Deadband
-# PINI - Process at Initialization
-# EGU - Engineering units name
-# LOLO, LOW, HIGH, HIHI - Alarm Limits
-# LLSV, LSV, HSV, HHSV - Alarm Associated severities
-# OMSL -	Output Mode Select can be closed_loop or supervisory
-#         If supervisory is specified, the value in the VAL field can be set
-#					externally via dbPuts at run-time. If closed_loop is specified, the
-#					VAL field's value is obtained from the address specified in the
-#					desired output location field (DOL)
-# OIF -  Incremental or Full
-#					decides whether the value obtained from DOL is an increment to be
-#					added to the current VAL or if the value obtained from DOL is the
-#					actual value.
-# ASLO & AOFF - Specify the Slope and offset Changing the pv VAL field according to:
-#								VAL = VAL*ASLO + AOFF
-
-# Specific records for:
-
-# bi record
-# ZSV; OSV; COSV - Zero Severity, One Severity; Change of State Severity.
-#									The possible values for these fields are NO ALARM, MINOR, and MAJOR.
-
-#ao record
-# DOL - Desired output Link: The value where that the ao value will take if in closed_loop mode
 #################################################
 #		AI - Analog Input
 #################################################
@@ -50,7 +17,7 @@ record(ai, "$(user):Temp1"){
 	field(SCAN, "2 second")
 	field(LOPR, "0")
 	field(HOPR, "50")
-	field(ADEL, "0.5")
+	field(ADEL, "0.1")
 	field(EGU, "C")
 	field(PREC, "1")
 
@@ -61,6 +28,8 @@ record(ai, "$(user):Temp1"){
 	field(HIHI, "35")
 	field(LSV, "MINOR")
 	field(HSV, "MINOR")
+	field(LLSV, "MAJOR")
+	field(HHSV, "MAJOR")
 }
 
 record(ai, "$(user):Hum1"){
@@ -68,7 +37,7 @@ record(ai, "$(user):Hum1"){
 	field(INP, "@arduino.proto getHum1() $(PORT)")
 	field(DESC, "Inside Humidity (sensor1)")
 	field(SCAN, "2 second")
-	field(ADEL, "1")
+	field(ADEL, "0.5")
 	field(EGU, "%")
 	field(PREC, "0")
 
@@ -84,7 +53,9 @@ record(ai, "$(user):Hum1"){
 	field(HIGH, "70")
 	field(HIHI, "90")
 	field(LSV, "MINOR")
-	field(HSV, "MINOR")
+	field(HSV, "MAJOR")
+	field(LLSV, "MAJOR")
+	field(HHSV, "MAJOR")
 }
 
 
@@ -93,7 +64,7 @@ record(ai, "$(user):Temp2"){
 	field(INP, "@arduino.proto getTemp2() $(PORT)")
 	field(DESC, "Outside Temperature")
 	field(SCAN, "2 second")
-	field(ADEL, "0.5")
+	field(ADEL, "0.1")
 	field(EGU, "C")
 	field(PREC, "1")
 }
@@ -102,7 +73,7 @@ record(ai, "$(user):Hum2"){
 	field(INP, "@arduino.proto getHum2() $(PORT)")
 	field(DESC, "Outside Humidity (sensor3)")
 	field(SCAN, "2 second")
-	field(ADEL, "1")
+	field(ADEL, "0.5")
 	field(EGU, "%")
 	field(PREC, "0")
 
@@ -115,7 +86,7 @@ record(ai, "$(user):WaterTemp"){
 	field(INP, "@arduino.proto getWaterTemp() $(PORT)")
 	field(DESC, " Water temperature  ")
 	field(SCAN, "2 second")
-	field(ADEL, "0.5")
+	field(ADEL, "0.1")
 	field(EGU, "C")
 }
 
@@ -127,7 +98,7 @@ record(ai, "$(user):Lum1")
 	field(SCAN, "2 second")
 	field(PINI, "YES")
 	field(EGU, "PPFD")
-	field(ADEL, "10")
+	field(ADEL, "1")
 	field(LOPR, "0")
 	field(HOPR, "120000")	#High Operating Range
 	field(PREC,	"0")
@@ -164,85 +135,4 @@ record(ai,	"$(user):LAI_4") {
 	field(DESC,	"Plant4 area in pixels")
 	field(EGU, "pixels")
 	field(PINI,"YES")
-}
-
-
-#################################################
-#		AO - Analog Output
-#################################################
-
-record(ao, $(user):Apperture) {
-   	field(DESC, "Servo motor set variable")
-    	field(DTYP, "stream")
-    	field(OUT, "@arduino.proto setServo() $(PORT)")
-	field(PINI,	"YES")
-    	field(DRVL, "0")
-    	field(DRVH, "170")
-	field(LOPR, "-5")
-	field(HOPR, "180")	#High Operating Range
-	field(ADEL, "1")
-	field(EGU, "servo angle")
-	field(SCAN, "2 second")
-
-
-		#Set PID link
-		field(DOL, "$(user):TempPID")
-		field(OMSL,"closed_loop")
-
-		# When PID is INVALID, go back to 0
-		field(IVOA, "Set output to IVOV")
-		field(IVOV, "1")
-}
-
-record(ao, $(user):Fan) {
-    	field(DESC, "2Wire Fan")
-    	field(DTYP, "stream")
-    	field(OUT, "@arduino.proto setFan() $(PORT)")
-    	field(DRVL, "0")
-    	field(DRVH, "255")
-	field(LOPR, "0")
-	field(HOPR, "255")	#High Operating Range
-	field(ADEL, "10")
-	field(EGU, "dutycycle")
-	field(SCAN, "2 second")
-	field(PINI, "YES")
-
-	#Set PID link
-	field(DOL, "$(user):FanPID")
-	field(OMSL,"closed_loop")
-}
-
-# Water Pump 1
-record(bo, $(user):RELE1) {
-	field(DESC, "Water pump1")
-	field(DTYP, "stream")
-	field(OUT, "@arduino.proto setRELE1() $(PORT)")
-	field(PINI, "YES")
-	field(ONAM,	"OFF")
-	field(ZNAM,	"ON")
-	field(OSV,	"MAJOR") #one severity
-}
-record(bo, $(user):RELE2) {
-	field(DESC, "Bo for RELE2")
-	field(DTYP, "stream")
-	field(OUT, "@arduino.proto setRELE2() $(PORT)")
-	field(PINI, "YES")
-	field(ONAM,	"ON")
-	field(ZNAM,	"OFF")
-}
-record(bo, $(user):RELE3) {
-	field(DESC, "Bo for RELE3")
-	field(DTYP, "stream")
-	field(OUT, "@arduino.proto setRELE3() $(PORT)")
-	field(PINI, "YES")
-	field(ONAM,	"ON")
-	field(ZNAM,	"OFF")
-}
-record(bo, $(user):RELE4) {
-	field(DESC, "Bo for RELE4")
-	field(DTYP, "stream")
-	field(OUT, "@arduino.proto setRELE4() $(PORT)")
-	field(PINI, "YES")
-	field(ONAM,	"ON")
-	field(ZNAM,	"OFF")
 }
