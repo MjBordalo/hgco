@@ -13,6 +13,8 @@ include $(TOP)/configure/CONFIG
 DB += sensors.db
 DB += actuators.db
 DB += control.db
+DB += control-Temperature.db
+DB += control-Humidity.db
 #DB += example.db
 
 #----------------------------------------------------

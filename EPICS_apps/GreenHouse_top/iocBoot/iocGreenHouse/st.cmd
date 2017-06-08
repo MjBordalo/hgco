@@ -45,6 +45,8 @@ asynSetOption("USB0",-1,"crtscts","N")
 dbLoadRecords("db/sensors.db","user=miHost,PORT=USB0")
 dbLoadRecords("db/actuators.db","user=miHost,PORT=USB0")
 dbLoadRecords("db/control.db","user=miHost,PORT=USB0")
+dbLoadRecords("db/control-Temperature.db","user=miHost,PORT=USB0")
+dbLoadRecords("db/control-Humidity.db","user=miHost,PORT=USB0")
 
 cd ${AUTOSAVE}/asApp/Db
 dbLoadRecords("save_restoreStatus.db","P=miHostAS:")

@@ -85,6 +85,7 @@ menu(menuScan) {
 	choice(menuScanPassive,"Passive")
 	choice(menuScanEvent,"Event")
 	choice(menuScanI_O_Intr,"I/O Intr")
+	choice(menuScan60_second,"60 second")
 	choice(menuScan10_second,"10 second")
 	choice(menuScan5_second,"5 second")
 	choice(menuScan2_second,"2 second")

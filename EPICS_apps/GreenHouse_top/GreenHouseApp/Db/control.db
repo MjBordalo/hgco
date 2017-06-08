@@ -6,6 +6,8 @@
 #################################################
 #		Calc - Variables based on calculations
 #################################################
+
+##Fields to compute DLI to actual time (currentDLI) and to save the DLI of the previous day
 record(calc, "$(user):currentDLI"){
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC, "current integrated Daily light Integral")
@@ -49,67 +51,36 @@ record(seq,"$(user):do_reset") {
     field(DESC, "seq do_reset test")
     field(SELM, "All")
     field(DLY1, "0")
-    field(DOL1, "$(user):currentDLI")
-    field(LNK1, "$(user):DLI.VAL PP NMS")
+    field(DOL1, "$(user):currentDLI")				#put the day integral to
+    field(LNK1, "$(user):DLI.VAL PP NMS")		#this variable
     field(DLY2, "1")
-    field(DOL2, "0")
-    field(LNK2, "$(user):currentDLI.VAL")
+    field(DOL2, "0")												#reset with zero
+    field(LNK2, "$(user):currentDLI.VAL")		#the current DLI
 }
 
-# Error computation’ s SCAN drives the rest
-record(calc, "$(user):TempError")
-{
-		field(DESC, "Temperature Error")
-		field(SCAN, "2 second")
-		field(INPA, "$(user):Temp1")
-		field(INPB, "$(user):TempSetpoint")
-		field(CALC, "A-B")
-		field(PREC, "1")
+
+
+##	Fields to create a periodic sampling Ts= 60sec
+
+record(stringin,"$(user):seconds") {
+  field(DTYP,"Soft Timestamp")
+  field(INP,"@%S")
+  field(SCAN,"1 second")
+  field(FLNK,"$(user):Ts")
 }
-
-# Proportional Feedback signal
-# u = Kp*TempError
-# TempError = Temp1- TempSetpoint
-record(calc, "$(user):TempPID")
-{
-		field(DESC, "GreenHouse Temp PID")
-		field(PREC, "0")
-		field(SCAN, "2 second")
-
-		field(LOPR, "0")			#<--- Isto faz alguma coisa aqui?
-		field(HOPR, "170")
-		field(INPA, "60")			#Kp
-		field(INPB, "$(user):TempError")
-		field(CALC, "A*B")
+record(calcout,"$(user):Ts") {
+  field(INPA,"$(user):seconds")
+#  field(CALC,"A>235950?1:0")
+  field(CALC,"A<1?0:1")				#CALC is always 1 if A =00 calc changes to 0
+  field(OOPT,"Transition To Zero")	#when A=0 there is a transition to zero
+  field(OUT,"$(user):TsFanout PP")	#and this is processed
 }
-# Proportional Feedback signal
-# u = Kp*TempError
-# TempError = Temp1- TempSetpoint
-record(calc, "$(user):FanPID")
-{
-		field(DESC, "GreenHouse Temp PID")
-		field(PREC, "0")
-		field(SCAN, "2 second")
+#List of PV to process at sampling time Ts
+record(fanout, "$(user):TsFanout") {
+  field(LNK1, "$(user):DebugNumber")
+	field(LNK2, "$(user):TempError")
+	field(LNK3, "$(user):TempInPredictor")
 
-		field(LOPR, "15")
-		field(HOPR, "255")
-		field(INPA, "40")			#Kp
-		field(INPB, "$(user):TempError")
-		field(CALC, "A*B > 15 ? A*B: 15")
-		field(FLNK,	"miHost:Fan PP")
-}
-
-###################################
-# Setpoints
-###################################
-record(ao, "$(user):TempSetpoint"){
-	info(autosaveFields, "VAL")		#autosave
-	field(DTYP, "Soft Channel")	#this is done by default
-	#field(SCAN, "2 second")
-	field(VAL, "20")		#init setpoint
-	field(DRVH, "40")
-	field(DRVL, "10")
-	field(PINI,	"YES")
 }
 
 #############################
@@ -122,6 +93,15 @@ record(stringin , "$(user):ExpString"){
 	field(PINI,"YES")
 }
 
+record(calc,	"$(user):DebugNumber") {
+	field(DESC,	"debug number changin at Ts sample time")
+	field(PINI,"YES")
+	field(VAL,	"0")
+
+	field(INPA,	"$(user):DebugNumber")
+	field(INPB,	"1")
+	field(CALC,	"A+B")
+}
 #################
 # Pi
 #############

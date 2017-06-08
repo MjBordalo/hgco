@@ -1,0 +1,35 @@
+# author: Miguel Bordalo
+#
+# This document presents the PV in order to control the greenhouse Temperature
+#
+
+
+#################################################
+#		Calc - Variables based on calculations
+#################################################
+# Integral Feedback signal
+# I=I+Ts*K*TempError
+record(calc, "$(user):ControlMistMaker")
+{
+		field(DESC, "active Mist Maker")
+		field(SCAN, "2 second")
+		field(PINI,	"YES")
+		field(VAL,	"0")
+
+		#field(LOPR, "0")			#<--- Isto faz alguma coisa aqui?
+		#field(HOPR, "170")
+		field(INPA, "$(user):Hum1")
+		field(INPB, "60")
+		field(INPC, "70")
+		field(INPD, "0")
+		field(INPE, "1")
+		field(INPF, "$(user):MixMaker")
+		field(CALC, "A>C?D:(A<B)?E:F")
+
+		field(FLNK,	"$(user):ControlMistMakerfanout")
+}
+record(fanout, "$(user):ControlMistMakerfanout") {
+  #field(SCAN, ".1 second")
+  field(LNK1, "$(user):MixMakerFan")
+  field(LNK2, "$(user):MixMaker")
+}

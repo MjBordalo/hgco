@@ -9,3 +9,12 @@ CSS BOY allows building your GUI with drag and drop and connecting to your data 
 
 ## Web OPI
 Allows To have the CSS OPI online
+
+## Connect to EPICS mysql DB
+
+jbdc:mysql://hgco.ddns.net/archive
+
+## Configure BOY Color and Font File
+
+1. Edit>Preferences
+2. CSS Applications>Display>BOY

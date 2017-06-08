@@ -17,7 +17,7 @@ record(ai, "$(user):Temp1"){
 	field(SCAN, "2 second")
 	field(LOPR, "0")
 	field(HOPR, "50")
-	field(ADEL, "0.1")
+	field(ADEL, "0.2")
 	field(EGU, "C")
 	field(PREC, "1")
 
@@ -37,9 +37,9 @@ record(ai, "$(user):Hum1"){
 	field(INP, "@arduino.proto getHum1() $(PORT)")
 	field(DESC, "Inside Humidity (sensor1)")
 	field(SCAN, "2 second")
-	field(ADEL, "0.5")
+	field(ADEL, "0.1")
 	field(EGU, "%")
-	field(PREC, "0")
+	field(PREC, "1")
 
 	#linear calibration
 	#in this case because this PV is read from a float we cannot use the field LINR
@@ -48,12 +48,12 @@ record(ai, "$(user):Hum1"){
 	field(AOFF, "5.886")	#linear slope offset
 
 	#Alarms
-	field(LOLO, "40")
+	field(LOLO, "50")
 	field(LOW, "60")
 	field(HIGH, "70")
-	field(HIHI, "90")
+	field(HIHI, "80")
 	field(LSV, "MINOR")
-	field(HSV, "MAJOR")
+	field(HSV, "MINOR")
 	field(LLSV, "MAJOR")
 	field(HHSV, "MAJOR")
 }
@@ -64,7 +64,7 @@ record(ai, "$(user):Temp2"){
 	field(INP, "@arduino.proto getTemp2() $(PORT)")
 	field(DESC, "Outside Temperature")
 	field(SCAN, "2 second")
-	field(ADEL, "0.1")
+	field(ADEL, "0.2")
 	field(EGU, "C")
 	field(PREC, "1")
 }
@@ -73,7 +73,7 @@ record(ai, "$(user):Hum2"){
 	field(INP, "@arduino.proto getHum2() $(PORT)")
 	field(DESC, "Outside Humidity (sensor3)")
 	field(SCAN, "2 second")
-	field(ADEL, "0.5")
+	field(ADEL, "0.1")
 	field(EGU, "%")
 	field(PREC, "0")
 
@@ -86,7 +86,7 @@ record(ai, "$(user):WaterTemp"){
 	field(INP, "@arduino.proto getWaterTemp() $(PORT)")
 	field(DESC, " Water temperature  ")
 	field(SCAN, "2 second")
-	field(ADEL, "0.1")
+	field(ADEL, "0.2")
 	field(EGU, "C")
 }
 
