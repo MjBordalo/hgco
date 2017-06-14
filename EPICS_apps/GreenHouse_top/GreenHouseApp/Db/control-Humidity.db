@@ -12,7 +12,7 @@
 record(calc, "$(user):ControlMistMaker")
 {
 		field(DESC, "active Mist Maker")
-		field(SCAN, "2 second")
+		#field(SCAN, "10 second")
 		field(PINI,	"YES")
 		field(VAL,	"0")
 
@@ -24,7 +24,8 @@ record(calc, "$(user):ControlMistMaker")
 		field(INPD, "0")
 		field(INPE, "1")
 		field(INPF, "$(user):MixMaker")
-		field(CALC, "A>C?D:(A<B)?E:F")
+		field(INPG,	"2")
+		field(CALC, "A>C?D:(A<(B+G))?E:F")
 
 		field(FLNK,	"$(user):ControlMistMakerfanout")
 }
@@ -32,4 +33,35 @@ record(fanout, "$(user):ControlMistMakerfanout") {
   #field(SCAN, ".1 second")
   field(LNK1, "$(user):MixMakerFan")
   field(LNK2, "$(user):MixMaker")
+}
+
+
+record(calcout, "$(user):HumInPredictor") {
+	#scaned at Ts by TsFanout
+	field(DESC,	"HumIn predictor")
+	field(OOPT,	"Every Time")	#write output every time record is processed.
+
+	field(INPA,	"$(user):Hum1")
+	field(INPB,	"$(user):Hum2")
+	field(INPC,	"$(user):Apperture")
+	field(INPD,	"$(user):Fan")
+	field(INPE,	"$(user):MixMaker")
+	field(INPF,	"$(user):Temp1")
+
+	field(INPK,	"$(user):HumInPredictor")
+	#INPL -> sample delayed
+
+	field(CALC,	"L:=K ; 0.8006*A +0.3435*B -1.1024*C -0.0032*D +5.3790*E -0.0630*F")
+	field(FLNK,	"$(user):HumInPredictorError")
+}
+
+###################################
+# Error
+###################################
+record(calc,	"$(user):HumInPredictorError") {
+	field(DESC,	"HumInPredictorError")
+
+	field(INPA,	"$(user):HumInPredictor.L") #HumIn predictor delayed
+	field(INPB,	"$(user):Hum1")
+	field(CALC,	"SQRT((A-B)*(A-B))")
 }

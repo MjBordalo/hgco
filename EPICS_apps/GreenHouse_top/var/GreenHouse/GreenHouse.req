@@ -7,7 +7,7 @@ miHost:Apperture.VAL
 miHost:Apperture.OMSL
 miHost:Fan.VAL
 miHost:Fan.OMSL
-miHost:TempSetpoint.VAL
+miHost:UserTempSetpoint.VAL
 miHost:MixMaker.VAL
 miHost:MixMaker.OMSL
 miHost:MixMakerFan.VAL

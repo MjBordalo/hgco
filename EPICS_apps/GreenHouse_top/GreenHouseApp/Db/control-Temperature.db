@@ -130,7 +130,9 @@ record(calcout, "$(user):TempInPredictor") {
 	field(INPH,	"$(user):thetaT4 PP")			#theta4
 	field(INPI,	"$(user):Fan")
 
-	field(CALC,	"B + A*(B-C) + D*E + F*G + H*I")
+	field(INPK,	"$(user):TempInPredictor")
+
+	field(CALC,	" L:=K ; B + A*(B-C) + D*E + F*G + H*I")
 	field(FLNK,	"$(user):TempInPredictorDelayed")
 }
 
@@ -179,15 +181,28 @@ record(calc,	"$(user):TempInPredictorError") {
 ###################################
 # Setpoints
 ###################################
-record(ao, "$(user):TempSetpoint"){
+record(ao, "$(user):UserTempSetpoint"){
 	info(autosaveFields, "VAL")		#autosave
 	field(DTYP, "Soft Channel")	#this is done by default
 	field(EGU,	"C")
 	#field(SCAN, "2 second")
 	field(VAL, "20")		#init setpoint
+	field(PINI,	"YES")
+
 	field(DRVH, "40")
 	field(DRVL, "10")
 	field(PREC,	"1")
+
+}
+
+#if the outside temperature is higher than the setpoint change the setpoint for that value
+record(calc,	"$(user):TempSetpoint") {
+	#it is scan periodic by $(user):TsFanout
+	field(DESC,	"description")
+	field(CALC,	"(A>B)?A:B")
+	field(INPA,	"$(user):UserTempSetpoint")
+	field(INPB,	"$(user):Temp2")
+
 	field(PINI,	"YES")
 }
 
@@ -201,6 +216,38 @@ record(stringin , "$(user):ExpString"){
 	field(PINI,"YES")
 }
 
+record(calc, "old-data") {
+  field(INPA, "$(user):TempInPredictorError CP")
+  field(CALC, "C;C:=B;B:=A")
+}
+
+
+#record(waveform,	"teste") {
+#	field(DESC,	"waveform test")
+#	field(NELM,	"3")
+#	field(FTVL,	"FLOAT")
+#	field(INP,	"$(user):TempError")
+#	field(SCAN,	"10 second")
+#}
+#
+#record(calc, "random_signal") {
+#    field(DESC, "example random signal")
+#    field(CALC, "rndm")
+#}
+#
+#record(swait, "memory_example") {
+#    field(DESC, "average of last four values")
+#    field(INAN, "random_signal")
+#    field(INAP, "Yes")
+#    field(INBN, "memory_example.A")
+#    field(INBP, "No")
+#    field(INCN, "memory_example.B")
+#    field(INCP, "No")
+#    field(INDN, "memory_example.C")
+#    field(INDP, "No")
+#    field(CALC, "(A+B+C+D)/4")
+#    field(SCAN, "I/O Intr")
+#}
 #################
 # Pi
 #############

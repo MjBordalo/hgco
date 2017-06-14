@@ -76,10 +76,16 @@ record(calcout,"$(user):Ts") {
   field(OUT,"$(user):TsFanout PP")	#and this is processed
 }
 #List of PV to process at sampling time Ts
+#This order is IMPORTANT!
+
 record(fanout, "$(user):TsFanout") {
   field(LNK1, "$(user):DebugNumber")
-	field(LNK2, "$(user):TempError")
-	field(LNK3, "$(user):TempInPredictor")
+	field(LNK2, "$(user):TempSetpoint")
+	field(LNK3, "$(user):TempError")
+	field(LNK4, "$(user):ControlMistMaker")
+	field(LNK5, "$(user):TempInPredictor")
+	field(LNK6, "$(user):HumInPredictor")
+	#field(LNK7, "")
 
 }
 
@@ -101,6 +107,13 @@ record(calc,	"$(user):DebugNumber") {
 	field(INPA,	"$(user):DebugNumber")
 	field(INPB,	"1")
 	field(CALC,	"A+B")
+}
+
+record(calc,	"testecalc") {
+	field(SCAN,	"1 second")
+	field(DESC,	"description")
+	field(INPA,	"3.0")
+	field(CALC,	"A+2")
 }
 #################
 # Pi
