@@ -5,6 +5,7 @@
 ../O.Common/GreenHouse.dbd : ../../../dbd/stream.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/asyn-4-26/dbd/drvAsynSerialPort.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/synApps_5_8/support/autosave-5-6-1/dbd/asSupport.dbd
+../O.Common/GreenHouse.dbd : ../dbSubExample.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/menuGlobal.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/menuConvert.dbd
 ../O.Common/GreenHouse.dbd : /usr/local/epics/base/dbd/aaiRecord.dbd

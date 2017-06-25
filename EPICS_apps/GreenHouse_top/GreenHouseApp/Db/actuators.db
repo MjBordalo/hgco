@@ -29,7 +29,7 @@ record(ao, $(user):Apperture) {
   	#field(AOFF, "-1.215")	#linear slope offset
 
 		#Set PID link
-		field(DOL, "$(user):PIDAperture")
+		field(DOL, "$(user):aSubExample.VALA")
 		field(OMSL,"closed_loop")
 
 		# When PID is INVALID, go back to 1
@@ -55,7 +55,7 @@ record(ao, $(user):Fan) {
   field(ASLO, "0.392156")	#linear slope calibration m=100/255
 
 	#Set PID link
-	field(DOL, "$(user):FanPID")
+	field(DOL, "$(user):aSubExample.VALB")
 	field(OMSL,"closed_loop")
 }
 
@@ -78,12 +78,13 @@ record(bo, $(user):MixMaker) {
 	field(ZNAM,	"OFF")
 
   #Set Control link
-  field(DOL, "$(user):ControlMistMaker")
+    field(DOL, "$(user):ControlMistMaker")
+  #field(DOL, "$(user):aSubExample.VALF")# TODO: mudar isto
   field(OMSL,"closed_loop")
 
 }
 record(bo, $(user):MixMakerFan) {
-  info(autosaveFields, "VAL OMSL")	
+  info(autosaveFields, "VAL OMSL")
 	field(DESC, "Bo for RELE3")
 	field(DTYP, "stream")
 	field(OUT, "@arduino.proto setRELE3() $(PORT)")
@@ -93,6 +94,7 @@ record(bo, $(user):MixMakerFan) {
 
   #Set Control link
   field(DOL, "$(user):ControlMistMaker")
+  #field(DOL, "$(user):aSubExample.VALF") # TODO: mudar isto
   field(OMSL,"closed_loop")
 
 }

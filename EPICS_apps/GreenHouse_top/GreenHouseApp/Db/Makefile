@@ -16,7 +16,7 @@ DB += control.db
 DB += control-Temperature.db
 DB += control-Humidity.db
 #DB += example.db
-
+DB += dbSubExample.db
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
 # <anyname>_template = <templatename>

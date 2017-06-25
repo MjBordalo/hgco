@@ -1,0 +1,8 @@
+epicsEnvSet("ARCH","linux-arm")
+epicsEnvSet("IOC","iocGreenHouse")
+epicsEnvSet("TOP","/home/pi/hgco/EPICS_apps/GreenHouse_top")
+epicsEnvSet("SUPPORT","/usr/local/epics/synApps_5_8/support")
+epicsEnvSet("AUTOSAVE","/usr/local/epics/synApps_5_8/support/autosave-5-6-1")
+epicsEnvSet("ASYN","/usr/local/epics/synApps_5_8/support/asyn-4-26")
+epicsEnvSet("STREAM","/usr/local/epics/synApps_5_8/support/stream-2-6a")
+epicsEnvSet("EPICS_BASE","/usr/local/epics/base")

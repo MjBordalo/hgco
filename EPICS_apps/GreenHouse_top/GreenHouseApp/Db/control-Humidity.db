@@ -9,59 +9,118 @@
 #################################################
 # Integral Feedback signal
 # I=I+Ts*K*TempError
-record(calc, "$(user):ControlMistMaker")
-{
-		field(DESC, "active Mist Maker")
-		#field(SCAN, "10 second")
-		field(PINI,	"YES")
-		field(VAL,	"0")
+#record(calc, "$(user):ControlMistMaker")
+#{
+#		field(DESC, "active Mist Maker")
+#		#field(SCAN, "10 second")
+#		field(PINI,	"YES")
+#		field(VAL,	"0")
+#
+#		#field(LOPR, "0")			#<--- Isto faz alguma coisa aqui?
+#		#field(HOPR, "170")
+#		field(INPA, "$(user):Hum1")
+#		field(INPB, "60")
+#		field(INPC, "70")
+#		field(INPD, "0")
+#		field(INPE, "1")
+#		field(INPF, "$(user):MixMaker")
+#		field(INPG,	"2")
+#		field(CALC, "A>C?D:(A<(B+G))?E:F")
+#
+#		field(FLNK,	"$(user):ControlMistMakerfanout")
+#}
+#record(bi, "$(user):ControlMistMaker"){
+#		#field(FLNK,	"$(user):ControlMistMakerfanout")
+#		field(ONAM,	"one_name")
+#		field(ZNAM,	"zero_name")
+#}
+record(calc,	"$(user):ControlMistMaker") {
+	field(SCAN,	"1 second")
+	field(DESC,	"ControlMistMaker")
 
-		#field(LOPR, "0")			#<--- Isto faz alguma coisa aqui?
-		#field(HOPR, "170")
-		field(INPA, "$(user):Hum1")
-		field(INPB, "60")
-		field(INPC, "70")
-		field(INPD, "0")
-		field(INPE, "1")
-		field(INPF, "$(user):MixMaker")
-		field(INPG,	"2")
-		field(CALC, "A>C?D:(A<(B+G))?E:F")
-
-		field(FLNK,	"$(user):ControlMistMakerfanout")
+	field(INPA,	"$(user):aSubExample.VALF")
+	field(INPB,	"$(user):seconds")
+	#inPC -> contains: 60*duty (duty from 0-1)
+	field(CALC,	"(60*A)>B?1:0")
+	field(FLNK,	"$(user):ControlMistMakerfanout")
 }
+
+
+#record(bi, "$(user):ControlMistMaker"){
+#		#field(FLNK,	"$(user):ControlMistMakerfanout")
+#		field(ONAM,	"one_name")
+#		field(ZNAM,	"zero_name")
+#}
 record(fanout, "$(user):ControlMistMakerfanout") {
   #field(SCAN, ".1 second")
-  field(LNK1, "$(user):MixMakerFan")
-  field(LNK2, "$(user):MixMaker")
+  field(LNK1, "$(user):MixMakerFan PP")
+  field(LNK2, "$(user):MixMaker PP")
 }
 
 
-record(calcout, "$(user):HumInPredictor") {
-	#scaned at Ts by TsFanout
-	field(DESC,	"HumIn predictor")
-	field(OOPT,	"Every Time")	#write output every time record is processed.
 
-	field(INPA,	"$(user):Hum1")
-	field(INPB,	"$(user):Hum2")
-	field(INPC,	"$(user):Apperture")
-	field(INPD,	"$(user):Fan")
-	field(INPE,	"$(user):MixMaker")
-	field(INPF,	"$(user):Temp1")
+#record(calcout, "$(user):HumInPredictor") {
+#	#scaned at Ts by TsFanout
+#	field(DESC,	"HumIn predictor")
+#	field(OOPT,	"Every Time")	#write output every time record is processed.
+#
+#	field(INPA,	"$(user):Hum1")
+#	field(INPB,	"$(user):Hum2")
+#	field(INPC,	"$(user):Apperture")
+#	field(INPD,	"$(user):Fan")
+#	field(INPE,	"$(user):MixMaker")
+#	field(INPF,	"$(user):Temp1")
+#
+#	field(INPK,	"$(user):HumInPredictor")
+#	#INPL -> sample delayed
+#
+#	#field(CALC,	"L:=K ; 0.8006*A +0.3435*B -1.1024*C -0.0032*D +5.3790*E -0.0630*F")
+#	field(CALC,	"L:=K ; 0.8765*A +0.2052*B -1.6013*C -0.0051*D +8.0408*E -0.0398*F")
+#
+#	field(FLNK,	"$(user):HumInPredictorError")
+#}
 
-	field(INPK,	"$(user):HumInPredictor")
-	#INPL -> sample delayed
-
-	field(CALC,	"L:=K ; 0.8006*A +0.3435*B -1.1024*C -0.0032*D +5.3790*E -0.0630*F")
-	field(FLNK,	"$(user):HumInPredictorError")
+record(ai,	"$(user):HumInPredictorDelayed") {
+	info(autosaveFields, "VAL")		#autosave
+	field(DESC,	"huminpredictor")
+	#field(EGU, "pixels")
+	#field(PINI,	"YES")
+	#	field(INPK,	"$(user):HumInPredictor")
+	#	#INPL -> sample delayed
+	#
+	#	field(CALC,	"L:=K ;K")
+	#field(FLNK,	"$(user):HumInPredictorError")
 }
 
 ###################################
 # Error
 ###################################
-record(calc,	"$(user):HumInPredictorError") {
+record(ai,	"$(user):HumInPredictorError") {
 	field(DESC,	"HumInPredictorError")
 
-	field(INPA,	"$(user):HumInPredictor.L") #HumIn predictor delayed
-	field(INPB,	"$(user):Hum1")
-	field(CALC,	"SQRT((A-B)*(A-B))")
+	#field(INPA,	"$(user):HumInPredictor.L") #HumIn predictor delayed
+	#field(INPB,	"$(user):Hum1")
+	#field(CALC,	"SQRT((A-B)*(A-B))")
+}
+
+record(ai,	"$(user):RMSE_kalman_thetaH") {
+	field(DESC,	"RMSE_kalman_thetaH")
+}
+
+
+###################################
+# Setpoint
+###################################
+record(ao, "$(user):HumSetpoint"){
+	info(autosaveFields, "VAL")		#autosave
+	field(DTYP, "Soft Channel")	#this is done by default
+	field(EGU,	"%")
+	#field(SCAN, "2 second")
+	field(VAL, "50")		#init setpoint
+	field(PINI,	"YES")
+
+	field(DRVH, "0")
+	field(DRVL, "100")
+	field(PREC,	"1")
+
 }

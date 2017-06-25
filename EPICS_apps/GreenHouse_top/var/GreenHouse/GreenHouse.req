@@ -1,4 +1,5 @@
 miHost:DLI.VAL
+miHost:HumInPredictorDelayed.VAL
 miHost:LAI_1.VAL
 miHost:LAI_2.VAL
 miHost:LAI_3.VAL
@@ -7,6 +8,7 @@ miHost:Apperture.VAL
 miHost:Apperture.OMSL
 miHost:Fan.VAL
 miHost:Fan.OMSL
+miHost:HumSetpoint.VAL
 miHost:UserTempSetpoint.VAL
 miHost:MixMaker.VAL
 miHost:MixMaker.OMSL

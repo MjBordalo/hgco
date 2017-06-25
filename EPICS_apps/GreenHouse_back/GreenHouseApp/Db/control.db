@@ -1,0 +1,123 @@
+# author: Miguel Bordalo
+#
+# This document describes all the PV comming from Arduino sensors and actuators
+#
+
+#################################################
+#		Calc - Variables based on calculations
+#################################################
+
+##Fields to compute DLI to actual time (currentDLI) and to save the DLI of the previous day
+record(calc, "$(user):currentDLI"){
+	info(autosaveFields, "VAL")		#autosave
+	field(DESC, "current integrated Daily light Integral")
+
+	field(INPA, "$(user):Lum1")
+	field(INPB, "$(user):currentDLI")
+	field(CALC, "A*1e-6+B")
+
+	field(SCAN, "1 second")
+	field(EGU, "DLI")
+	#field(PREC, "6")
+	#field(ADEL, "10")
+
+	field(LOPR, "0")
+	field(HOPR, "1000")	#High Operating Range
+	field(PREC,	"1")
+}
+
+record(ai, "$(user):DLI"){
+	info(autosaveFields, "VAL")		#autosave
+	field(DESC, "Daily light Integral (mol.m-2.day-1)")
+	field(ADEL,	"1")
+	field(PINI,	"YES")
+	field(PREC,	"1")
+}
+
+record(stringin,"$(user):clock") {
+  field(DTYP,"Soft Timestamp")
+  field(INP,"@%H%M%S")
+  field(SCAN,"5 second")
+  field(FLNK,"$(user):check")
+}
+record(calcout,"$(user):check") {
+  field(INPA,"$(user):clock")
+#  field(CALC,"A>235950?1:0")
+  field(CALC,"A>045950?0:1")
+  field(OOPT,"Transition To Zero")
+  field(OUT,"$(user):do_reset PP")
+}
+record(seq,"$(user):do_reset") {
+    field(DESC, "seq do_reset test")
+    field(SELM, "All")
+    field(DLY1, "0")
+    field(DOL1, "$(user):currentDLI")				#put the day integral to
+    field(LNK1, "$(user):DLI.VAL PP NMS")		#this variable
+    field(DLY2, "1")
+    field(DOL2, "0")												#reset with zero
+    field(LNK2, "$(user):currentDLI.VAL")		#the current DLI
+}
+
+
+
+##	Fields to create a periodic sampling Ts= 60sec
+
+record(stringin,"$(user):seconds") {
+  field(DTYP,"Soft Timestamp")
+  field(INP,"@%S")
+  field(SCAN,"1 second")
+  field(FLNK,"$(user):Ts")
+}
+record(calcout,"$(user):Ts") {
+  field(INPA,"$(user):seconds")
+#  field(CALC,"A>235950?1:0")
+  field(CALC,"A<1?0:1")				#CALC is always 1 if A =00 calc changes to 0
+  field(OOPT,"Transition To Zero")	#when A=0 there is a transition to zero
+  field(OUT,"$(user):TsFanout PP")	#and this is processed
+}
+#List of PV to process at sampling time Ts
+#This order is IMPORTANT!
+
+record(fanout, "$(user):TsFanout") {
+  field(LNK1, "$(user):DebugNumber")
+	field(LNK2, "$(user):TempSetpoint")
+	field(LNK3, "$(user):TempError")
+	field(LNK4, "$(user):ControlMistMaker")
+	field(LNK5, "$(user):TempInPredictor")
+	field(LNK6, "$(user):HumInPredictor")
+	#field(LNK7, "")
+}
+
+#############################
+#   Debug
+#############################
+record(stringin , "$(user):ExpString"){
+	info(autosaveFields, "VAL")		#autosave
+	field(VAL, "no experience")
+	field(DESC, "anotar estados da experiencia")
+	field(PINI,"YES")
+}
+
+record(calc,	"$(user):DebugNumber") {
+	field(DESC,	"debug number changin at Ts sample time")
+	field(PINI,"YES")
+	field(VAL,	"0")
+
+	field(INPA,	"$(user):DebugNumber")
+	field(INPB,	"1")
+	field(CALC,	"A+B")
+}
+
+record(calc,	"testecalc") {
+	field(SCAN,	"1 second")
+	field(DESC,	"description")
+	field(INPA,	"3.0")
+	field(CALC,	"A+2")
+}
+#################
+# Pi
+#############
+#record (stringin, $(user):PiTemp {
+#    field (DTYP, "stream")
+#    field (INP,  "@arduino.proto getPiTemp() $(PORT)")
+#}

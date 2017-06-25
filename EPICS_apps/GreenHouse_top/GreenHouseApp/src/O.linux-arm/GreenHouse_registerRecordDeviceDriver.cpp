@@ -454,6 +454,10 @@ epicsShareExtern void (*pvar_func_save_restoreRegister)(void);
 epicsShareExtern void (*pvar_func_dbrestoreRegister)(void);
 epicsShareExtern void (*pvar_func_asInitHooksRegister)(void);
 epicsShareExtern void (*pvar_func_configMenuRegistrar)(void);
+epicsShareExtern void (*pvar_func_register_func_mySubInit)(void);
+epicsShareExtern void (*pvar_func_register_func_mySubProcess)(void);
+epicsShareExtern void (*pvar_func_register_func_myAsubInit)(void);
+epicsShareExtern void (*pvar_func_register_func_myAsubProcess)(void);
 
 epicsShareExtern int *pvar_int_asCaDebug;
 epicsShareExtern int *pvar_int_dbRecordsOnceOnly;
@@ -467,6 +471,9 @@ epicsShareExtern int *pvar_int_save_restoreIncompleteSetsOk;
 epicsShareExtern int *pvar_int_save_restoreDatedBackupFiles;
 epicsShareExtern int *pvar_int_save_restoreRemountThreshold;
 epicsShareExtern int *pvar_int_configMenuDebug;
+epicsShareExtern int *pvar_int_mySubDebug;
+epicsShareExtern int *pvar_int_Ts;
+epicsShareExtern double *pvar_double_TempIntegral_ant;
 static struct iocshVarDef vardefs[] = {
 	{"asCaDebug", iocshArgInt, (void * const)pvar_int_asCaDebug},
 	{"dbRecordsOnceOnly", iocshArgInt, (void * const)pvar_int_dbRecordsOnceOnly},
@@ -480,6 +487,9 @@ static struct iocshVarDef vardefs[] = {
 	{"save_restoreDatedBackupFiles", iocshArgInt, (void * const)pvar_int_save_restoreDatedBackupFiles},
 	{"save_restoreRemountThreshold", iocshArgInt, (void * const)pvar_int_save_restoreRemountThreshold},
 	{"configMenuDebug", iocshArgInt, (void * const)pvar_int_configMenuDebug},
+	{"mySubDebug", iocshArgInt, (void * const)pvar_int_mySubDebug},
+	{"Ts", iocshArgInt, (void * const)pvar_int_Ts},
+	{"TempIntegral_ant", iocshArgDouble, (void * const)pvar_double_TempIntegral_ant},
 	{NULL, iocshArgInt, NULL}
 };
 
@@ -512,6 +522,10 @@ int GreenHouse_registerRecordDeviceDriver(DBBASE *pbase)
     (*pvar_func_dbrestoreRegister)();
     (*pvar_func_asInitHooksRegister)();
     (*pvar_func_configMenuRegistrar)();
+    (*pvar_func_register_func_mySubInit)();
+    (*pvar_func_register_func_mySubProcess)();
+    (*pvar_func_register_func_myAsubInit)();
+    (*pvar_func_register_func_myAsubProcess)();
     iocshRegisterVariable(vardefs);
     return 0;
 }

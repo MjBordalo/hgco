@@ -1,0 +1,16 @@
+miHost:DLI.VAL
+miHost:LAI_1.VAL
+miHost:LAI_2.VAL
+miHost:LAI_3.VAL
+miHost:LAI_4.VAL
+miHost:Apperture.VAL
+miHost:Apperture.OMSL
+miHost:Fan.VAL
+miHost:Fan.OMSL
+miHost:UserTempSetpoint.VAL
+miHost:MixMaker.VAL
+miHost:MixMaker.OMSL
+miHost:MixMakerFan.VAL
+miHost:MixMakerFan.OMSL
+miHost:currentDLI.VAL
+miHost:ExpString.VAL

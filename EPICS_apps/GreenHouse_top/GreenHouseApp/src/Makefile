@@ -22,6 +22,13 @@ GreenHouse_DBD += drvAsynSerialPort.dbd
 GreenHouse_DBD += asSupport.dbd
 #GreenHouse_DBD += xxx.dbd
 
+# Link locally-provided code into the support library,
+# rather than directly into the IOC application.
+# This is required for Windows DLL builds.
+GreenHouse_SRCS += dbSubExample.c
+
+GreenHouse_DBD += dbSubExample.dbd
+
 # Add all the support libraries needed by this IOC
 GreenHouse_LIBS += autosave
 
@@ -45,4 +52,3 @@ GreenHouse_LIBS += stream
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
-

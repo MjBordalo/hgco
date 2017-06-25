@@ -1,0 +1,138 @@
+# author: Miguel Bordalo
+#
+# This document describes all the PV comming from Arduino sensors and actuators
+#
+#
+#
+#################################################
+#		AI - Analog Input
+#################################################
+
+
+#Temperature of first DHT22 Sensor
+record(ai, "$(user):Temp1"){
+	field(DTYP, "stream")
+	field(INP, "@arduino.proto getTemp1() $(PORT)")
+	field(DESC, "Inside Temperature")
+	field(SCAN, "2 second")
+	field(LOPR, "0")
+	field(HOPR, "50")
+	field(ADEL, "0.2")
+	field(EGU, "C")
+	field(PREC, "1")
+
+	#Alarms
+	field(LOLO, "0")
+	field(LOW, "15")
+	field(HIGH, "30")
+	field(HIHI, "35")
+	field(LSV, "MINOR")
+	field(HSV, "MINOR")
+	field(LLSV, "MAJOR")
+	field(HHSV, "MAJOR")
+}
+
+record(ai, "$(user):Hum1"){
+	field(DTYP, "stream")
+	field(INP, "@arduino.proto getHum1() $(PORT)")
+	field(DESC, "Inside Humidity (sensor1)")
+	field(SCAN, "2 second")
+	field(ADEL, "0.1")
+	field(EGU, "%")
+	field(PREC, "1")
+
+	#linear calibration
+	#in this case because this PV is read from a float we cannot use the field LINR
+	#once the .RVAL field is empty
+	field(ASLO, "0.992")	#linear slope calibration
+	field(AOFF, "5.886")	#linear slope offset
+
+	#Alarms
+	field(LOLO, "50")
+	field(LOW, "60")
+	field(HIGH, "70")
+	field(HIHI, "80")
+	field(LSV, "MINOR")
+	field(HSV, "MINOR")
+	field(LLSV, "MAJOR")
+	field(HHSV, "MAJOR")
+}
+
+
+record(ai, "$(user):Temp2"){
+	field(DTYP, "stream")
+	field(INP, "@arduino.proto getTemp2() $(PORT)")
+	field(DESC, "Outside Temperature")
+	field(SCAN, "2 second")
+	field(ADEL, "0.2")
+	field(EGU, "C")
+	field(PREC, "1")
+}
+record(ai, "$(user):Hum2"){
+	field(DTYP, "stream")
+	field(INP, "@arduino.proto getHum2() $(PORT)")
+	field(DESC, "Outside Humidity (sensor3)")
+	field(SCAN, "2 second")
+	field(ADEL, "0.1")
+	field(EGU, "%")
+	field(PREC, "0")
+
+	field(ASLO, "0.948")	#linear slope calibration
+	field(AOFF, "2.259")	#linear slope offset
+}
+
+record(ai, "$(user):WaterTemp"){
+	field(DTYP, "stream")
+	field(INP, "@arduino.proto getWaterTemp() $(PORT)")
+	field(DESC, " Water temperature  ")
+	field(SCAN, "2 second")
+	field(ADEL, "0.2")
+	field(EGU, "C")
+}
+
+record(ai, "$(user):Lum1")
+{
+	field(DTYP, "stream")
+	field(INP, "@arduino.proto getLum() $(PORT)")
+	field(DESC, "light Sensor umol/m^2/s^1" )
+	field(SCAN, "2 second")
+	field(PINI, "YES")
+	field(EGU, "PPFD")
+	field(ADEL, "1")
+	field(LOPR, "0")
+	field(HOPR, "120000")	#High Operating Range
+	field(PREC,	"0")
+
+	#Linear calibration using LINR
+	# In this case this VAL is an integer therefore RVAL is the raw value read from
+	# the arduino and LINR can be used to change VAL = RVAL*ESLO +EOFF
+	field(LINR, "LINEAR")
+	field(EOFF, "0.0")
+	field(ESLO, "0.19074") #10.3/54
+}
+
+#Altough the LAI does not come from the arduino it is filed by a python script
+record(ai,	"$(user):LAI_1") {
+	info(autosaveFields, "VAL")		#autosave
+	field(DESC,	"Plant1 area in pixels")
+	field(EGU, "pixels")
+	field(PINI,	"YES")
+}
+record(ai,	"$(user):LAI_2") {
+	info(autosaveFields, "VAL")		#autosave
+	field(DESC,	"Plant2 area in pixels")
+	field(EGU, "pixels")
+	field(PINI,	"YES")
+}
+record(ai,	"$(user):LAI_3") {
+	info(autosaveFields, "VAL")		#autosave
+	field(DESC,	"Plant3 area in pixels")
+	field(EGU, "pixels")
+	field(PINI,"YES")
+}
+record(ai,	"$(user):LAI_4") {
+	info(autosaveFields, "VAL")		#autosave
+	field(DESC,	"Plant4 area in pixels")
+	field(EGU, "pixels")
+	field(PINI,"YES")
+}

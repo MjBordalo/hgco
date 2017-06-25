@@ -1,0 +1,37 @@
+Terminator = LF;
+getBulb {
+	out "L";
+	in  "L %f";
+	ExtraInput = Ignore;
+}
+
+setBulb {
+	out "B%d\n";
+	ExtraInput = Ignore;
+}
+
+getPWM {
+	out "P";
+	in  "P %f";
+	ExtraInput = Ignore;
+}
+
+setPWM {
+	out "M%d\n";
+	ExtraInput = Ignore;	
+}
+
+getTemp {
+    out "T";
+    in "T %f";
+    ExtraInput = Ignore;
+}
+getHum {
+    out "H";
+    in "H %f";
+    ExtraInput = Ignore;
+}
+
+
+
+
