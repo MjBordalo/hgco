@@ -1,0 +1,272 @@
+# author: Miguel Bordalo
+#
+# This document presents the PV in order to control the greenhouse Temperature
+#
+
+
+#################################################
+#		Calc - Variables based on calculations
+#################################################
+# Error computation’ s SCAN drives the rest
+#record(calc, "$(user):TempError")
+#{
+#		#scan at Ts
+#		field(DESC, "Temperature Error")
+#		field(PREC, "2")
+#		field(PINI,	"YES")
+#		field(VAL,	"0")
+#
+#		field(INPA, "$(user):Temp1")
+#		field(INPB, "$(user):TempSetpoint")
+#		field(CALC, "B-A")
+#		field(FLNK,	"$(user):TempErrorfanout")
+#}
+#record(fanout, "$(user):TempErrorfanout") {
+#  #field(SCAN, ".1 second")
+#  field(LNK1, "$(user):I")
+#  field(LNK2, "$(user):FanPID")
+#}
+
+# Integral Feedback signal
+# I=I+Ts*K*TempError
+#record(calc, "$(user):I")
+#{
+#		field(DESC, "Integral error for aperture window")
+#		field(PREC, "2")
+#		#field(SCAN, "60 second")
+#		field(PINI,	"YES")
+#		field(VAL,	"0")
+#
+#		#field(LOPR, "0")			#<--- Isto faz alguma coisa aqui?
+#		#field(HOPR, "170")
+#		field(INPA, "$(user):TempError")
+#		field(INPB,	"$(user):I NPP")
+#		field(INPC,	"2")	#db_apantes 10 saturation level
+#		field(INPD, "60")			#Ts
+#		field(INPE,	"-0.1")		#Ki_ap
+#		field(CALC, "(B+D*E*A>C)?C:(B+D*E*A<-C)?(-C):(B+D*E*A)")
+#
+#		field(FLNK,	"$(user):PIDAperture")
+#}
+
+# Gain to do anti-windup
+# SatGain = -0.01*(TempPID - Aperture)
+#record(calc, "$(user):SatGain")
+#{
+#		field(DESC, "Integral error for aperture window")
+#		field(PREC, "3")
+#		field(SCAN, "60 second")
+#		field(PINI,	"YES")
+#		field(VAL,	"0")
+#
+#		#field(LOPR, "0")			#<--- Isto faz alguma coisa aqui?
+#		#field(HOPR, "170")
+#		field(INPA, "60")			#Ts
+#		field(INPB, "$(user):PIDAperture")
+#		field(INPC, "$(user):Apperture")
+#		field(INPD,	"-0.01")
+#		field(INPE,	"$(user):I")
+#		field(CALC, "A*D*(C-B)+E")
+#}
+
+# Proportional Feedback signal
+# u = Kp*TempError + I
+# TempError = Temp1- TempSetpoint
+#record(calc, "$(user):PIDAperture")
+#{
+#		field(DESC, "GreenHouse Temp PID")
+#		field(PREC, "2")
+#		field(PINI,	"YES")
+#		#field(SCAN, "60 second")
+#
+#		#field(LOPR, "0")			#<--- Isto faz alguma coisa aqui?
+#		#field(HOPR, "170")
+#		field(INPA, "-32")			#Kp_ap antes: -145
+#		field(INPB, "$(user):TempError")
+#		field(INPC,	"$(user):I")
+#		field(CALC, "A*B +C")
+#
+#}
+
+
+#-------------------------------------------------------
+
+# Proportional Feedback signal
+# u = Kp*TempError +KiI
+# TempError = Temp1- TempSetpoint
+#record(calc, "$(user):FanPID")
+#{
+#		field(DESC, "GreenHouse Temp PID")
+#		field(PREC, "0")
+#		#field(SCAN, "10 second")
+#
+#		field(LOPR, "0")
+#		field(HOPR, "100")
+#		field(INPA, "30")			#Kp_fan antes 5
+#		field(INPB, "$(user):PIDAperture")
+#		field(INPC, "$(user):Apperture")
+#		field(CALC, "A*(B-C)")
+#		#field(FLNK,	"miHost:Fan PP")
+#}
+
+###################################
+# Predictors
+###################################
+#record(calcout, "$(user):TempInPredictor") {
+#	#scaned at Ts by TsFanout
+#	field(DESC,	"TempIn predictor")
+#	field(OOPT,	"Every Time")	#write output every time record is processed.
+#
+#	field(INPA,	"-0.02318764") 		#theta1
+#	field(INPB,	"$(user):Temp1")
+#	field(INPC,	"$(user):Temp2")
+#
+#	field(INPD,	"0.000428227")		#thetaT2
+#	field(INPE,	"$(user):Lum1")
+#
+#	field(INPF,	"$(user):thetaT3 PP")			#theta3
+#	field(INPG,	"$(user):Apperture")
+#
+#	field(INPH,	"$(user):thetaT4 PP")			#theta4
+#	field(INPI,	"$(user):Fan")
+#
+#	field(INPK,	"$(user):TempInPredictor")
+#
+#	field(CALC,	" L:=K ; B + A*(B-C) + D*E + F*G + H*I")
+#	field(FLNK,	"$(user):TempInPredictorDelayed")
+#}
+
+
+record(ai,	"$(user):RMSE_kalman_thetaT") {
+	field(DESC,	"RMSE_kalman_theta")
+	#field(INPK,	"$(user):RMSE_kalman_theta")
+	##INPL has the last sample
+	#
+	#field(CALC,	"L:=K; K")
+}
+
+#record(calc,	"$(user):thetaT3") {
+#	field(DESC,	"thetaT3")
+#
+#	field(INPA,	"$(user):Temp1")
+#	field(INPB,	"$(user):Temp2")
+#	field(INPC,	"-0.047074")
+#	field(INPD,	"25")
+#
+#	field(CALC,	"(A-B)<=0?0:C*(A-B)/D")
+#}
+
+#record(calc,	"$(user):thetaT4") {
+#	field(DESC,	"thetaT4")
+#
+#	field(INPA,	"$(user):Temp1")
+#	field(INPB,	"$(user):Temp2")
+#	field(INPC,	"-0.0013908")
+#	field(INPD,	"25")
+#
+#	field(CALC,	"(A-B)<=0?0:C*(A-B)/D")
+#}
+
+#record(calcout, "$(user):TempInPredictorDelayed") {
+#	field(DESC,	"TempIn predictor delayed")
+#	field(OOPT,	"Every Time")	#write output every time record is processed.
+#	field(ODLY,	"60") # delay 60 seonds when putting to TempInPredictorDelayed
+#
+#	field(INPA,	"$(user):TempInPredictor")
+#	field(CALC,	"A")
+#	field(FLNK,	"$(user):TempInPredictorError")
+#}
+record(ai,	"$(user):TempInPredictorDelayed") {
+	field(DESC,	"TempIn predictor delayed")
+}
+###################################
+# Error
+###################################
+#record(calc,	"$(user):TempInPredictorError") {
+#	field(DESC,	"TempInPredictorError")
+#
+#	field(INPA,	"$(user):TempInPredictorDelayed")
+#	field(INPB,	"$(user):Temp1")
+#	field(CALC,	"SQRT((A-B)*(A-B))")
+#}
+record(ai,	"$(user):TempInPredictorError") {
+	field(DESC,	"TempInPredictorError")
+}
+
+###################################
+# Setpoints
+###################################
+record(ao, "$(user):UserTempSetpoint"){
+	info(autosaveFields, "VAL")		#autosave
+	field(DTYP, "Soft Channel")	#this is done by default
+	field(EGU,	"C")
+	#field(SCAN, "2 second")
+	field(VAL, "20")		#init setpoint
+	field(PINI,	"YES")
+
+	field(DRVH, "40")
+	field(DRVL, "10")
+	field(PREC,	"1")
+
+}
+
+#if the outside temperature is higher than the setpoint change the setpoint for that value
+record(calc,	"$(user):TempSetpoint") {
+	#it is scan periodic by $(user):TsFanout
+	field(DESC,	"description")
+	field(CALC,	"(A>B)?A:B+0.5")
+	field(INPA,	"$(user):UserTempSetpoint")
+	field(INPB,	"$(user):Temp2")
+
+	field(PINI,	"YES")
+}
+
+#############################
+#   Debug
+#############################
+record(stringin , "$(user):ExpString"){
+	info(autosaveFields, "VAL")		#autosave
+	field(VAL, "no experience")
+	field(DESC, "anotar estados da experiencia")
+	field(PINI,"YES")
+}
+
+record(calc, "old-data") {
+  field(INPA, "$(user):TempInPredictorError CP")
+  field(CALC, "C;C:=B;B:=A")
+}
+
+
+#record(waveform,	"teste") {
+#	field(DESC,	"waveform test")
+#	field(NELM,	"3")
+#	field(FTVL,	"FLOAT")
+#	field(INP,	"$(user):TempError")
+#	field(SCAN,	"10 second")
+#}
+#
+#record(calc, "random_signal") {
+#    field(DESC, "example random signal")
+#    field(CALC, "rndm")
+#}
+#
+#record(swait, "memory_example") {
+#    field(DESC, "average of last four values")
+#    field(INAN, "random_signal")
+#    field(INAP, "Yes")
+#    field(INBN, "memory_example.A")
+#    field(INBP, "No")
+#    field(INCN, "memory_example.B")
+#    field(INCP, "No")
+#    field(INDN, "memory_example.C")
+#    field(INDP, "No")
+#    field(CALC, "(A+B+C+D)/4")
+#    field(SCAN, "I/O Intr")
+#}
+#################
+# Pi
+#############
+#record (stringin, $(user):PiTemp {
+#    field (DTYP, "stream")
+#    field (INP,  "@arduino.proto getPiTemp() $(PORT)")
+#}

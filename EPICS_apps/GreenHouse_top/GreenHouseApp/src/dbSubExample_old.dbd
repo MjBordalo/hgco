@@ -1,6 +1,6 @@
 variable(mySubDebug)
-#variable(Ts)
-#variable(TempIntegral_ant, double) # if is not of type int it has to be specified
+variable(Ts)
+variable(TempIntegral_ant, double) # if is not of type int it has to be specified
 #variable(RMSE_kalman_P_ant, double)
 #variable(RMSE_kalman_K_ant, double)
 

@@ -1,0 +1,4 @@
+1)ir para
+cd ~/public_html/camera 
+ln -s /home/pi/camera/latest.jpg latest.jpg
+

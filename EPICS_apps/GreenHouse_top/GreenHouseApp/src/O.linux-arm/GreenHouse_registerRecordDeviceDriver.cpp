@@ -472,8 +472,6 @@ epicsShareExtern int *pvar_int_save_restoreDatedBackupFiles;
 epicsShareExtern int *pvar_int_save_restoreRemountThreshold;
 epicsShareExtern int *pvar_int_configMenuDebug;
 epicsShareExtern int *pvar_int_mySubDebug;
-epicsShareExtern int *pvar_int_Ts;
-epicsShareExtern double *pvar_double_TempIntegral_ant;
 static struct iocshVarDef vardefs[] = {
 	{"asCaDebug", iocshArgInt, (void * const)pvar_int_asCaDebug},
 	{"dbRecordsOnceOnly", iocshArgInt, (void * const)pvar_int_dbRecordsOnceOnly},
@@ -488,8 +486,6 @@ static struct iocshVarDef vardefs[] = {
 	{"save_restoreRemountThreshold", iocshArgInt, (void * const)pvar_int_save_restoreRemountThreshold},
 	{"configMenuDebug", iocshArgInt, (void * const)pvar_int_configMenuDebug},
 	{"mySubDebug", iocshArgInt, (void * const)pvar_int_mySubDebug},
-	{"Ts", iocshArgInt, (void * const)pvar_int_Ts},
-	{"TempIntegral_ant", iocshArgDouble, (void * const)pvar_double_TempIntegral_ant},
 	{NULL, iocshArgInt, NULL}
 };
 

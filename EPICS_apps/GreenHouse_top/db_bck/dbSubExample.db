@@ -1,0 +1,74 @@
+record(sub,"$(user):subExample")
+{
+    field(INAM,"mySubInit")
+    field(SNAM,"mySubProcess")
+}
+record(aSub,"$(user):aSubExample")
+{
+  #field(SCAN,  "10 second")
+    field(INAM,"myAsubInit")
+    field(SNAM,"myAsubProcess")
+
+    #Inputs
+    field(INPA,"$(user):Temp1")
+    field(FTA,"DOUBLE")
+    #field(NOA,"1") #this is set as 1- scalar by desfault
+    field(INPB,"$(user):Temp2")
+    field(FTB,"DOUBLE")
+
+    field(INPC,"$(user):TempSetpoint")
+    field(FTC,"DOUBLE")
+
+    field(INPD,"$(user):Hum1")
+    field(FTD,"DOUBLE")
+
+    field(INPE,"$(user):Hum2")
+    field(FTE,"DOUBLE")
+
+    field(INPF,"$(user):Fan")
+    field(FTF,"DOUBLE")
+
+    field(INPG,"$(user):Apperture")
+    field(FTG,"DOUBLE")
+
+    field(INPH,"$(user):MixMaker")
+    field(FTH,"DOUBLE")
+
+    field(INPI,"$(user):Lum1")
+    field(FTI,"DOUBLE")
+
+    field(INPJ,"$(user):HumSetpoint")
+    field(FTJ,"DOUBLE")
+
+    #field(INPK,"$(user):RMSE_kalman_theta")
+    #field(FTK,"DOUBLE")
+
+    #Outputs
+    #field(OUTA,  "PID")
+    #field(FTVA,  "DOUBLE")
+
+    #field(OUTB,  "fan")
+    #field(FTVB,  "DOUBLE")
+
+    field(OUTC,  "$(user):TempInPredictorDelayed PP")
+    field(FTVC,  "DOUBLE")
+
+    field(OUTD,  "$(user):HumInPredictorDelayed PP")
+    field(FTVD,  "DOUBLE")
+
+    field(OUTE,  "$(user):RMSE_kalman_thetaT PP")
+    field(FTVE,  "DOUBLE")
+
+    field(OUTF,  "$(user):ControlMistMaker PP")
+    field(FTVF,  "DOUBLE")
+
+    field(OUTG,  "$(user):TempInPredictorError PP")
+    field(FTVG,  "DOUBLE")
+
+    field(OUTH,  "$(user):HumInPredictorError PP")
+    field(FTVH,  "DOUBLE")
+
+    field(OUTI,  "$(user):RMSE_kalman_thetaH PP")
+    field(FTVI,  "DOUBLE")
+
+}

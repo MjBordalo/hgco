@@ -51,8 +51,8 @@ dbLoadRecords("db/control-Humidity.db","user=miHost,PORT=USB0")
 dbLoadRecords "db/dbSubExample.db", "user=miHost"
 ## Set this to see messages from mySub
 var mySubDebug 1
-#var Ts 60
-
+var Ts 60
+var TempIntegral_ant 0
 
 
 cd ${AUTOSAVE}/asApp/Db

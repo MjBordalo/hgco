@@ -67,6 +67,12 @@ record(bo, $(user):LEDLight) {
 	field(PINI, "YES")
 	field(ONAM,	"ON")
 	field(ZNAM,	"OFF")
+
+  #Set Control link
+  field(DOL, "$(user):ControlLight")
+  #field(DOL, "$(user):aSubExample.VALF") # TODO: mudar isto
+  field(OMSL,"closed_loop")
+
 }
 record(bo, $(user):MixMaker) {
   info(autosaveFields, "VAL OMSL")
@@ -78,7 +84,7 @@ record(bo, $(user):MixMaker) {
 	field(ZNAM,	"OFF")
 
   #Set Control link
-    field(DOL, "$(user):ControlMistMaker")
+    field(DOL, "$(user):ControlMistMaker_process")
   #field(DOL, "$(user):aSubExample.VALF")# TODO: mudar isto
   field(OMSL,"closed_loop")
 
@@ -93,7 +99,7 @@ record(bo, $(user):MixMakerFan) {
 	field(ZNAM,	"OFF")
 
   #Set Control link
-  field(DOL, "$(user):ControlMistMaker")
+  field(DOL, "$(user):ControlMistMaker_process")
   #field(DOL, "$(user):aSubExample.VALF") # TODO: mudar isto
   field(OMSL,"closed_loop")
 

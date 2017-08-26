@@ -37,21 +37,14 @@
 record(calc,	"$(user):ControlMistMaker") {
 	field(SCAN,	"1 second")
 	field(DESC,	"ControlMistMaker")
-	field(INPA,	"$(user):aSubExample.VALF")
-	field(CALC,	"A")
-	#field(FLNK,	"$(user):ControlMistMaker_process")
-}
-
-record(calc,	"$(user):ControlMistMaker_process") {
-	field(SCAN,	"1 second")
-	field(DESC,	"ControlMistMaker")
 
 	field(INPA,	"$(user):aSubExample.VALF")
-	field(INPB,	"$(user):Ts10")
+	field(INPB,	"$(user):seconds")
 	#inPC -> contains: 60*duty (duty from 0-1)
-	field(CALC,	"(10*A)>B?1:0")
+	field(CALC,	"(60*A)>B?1:0")
 	field(FLNK,	"$(user):ControlMistMakerfanout")
 }
+
 
 #record(bi, "$(user):ControlMistMaker"){
 #		#field(FLNK,	"$(user):ControlMistMakerfanout")

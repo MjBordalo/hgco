@@ -12,11 +12,13 @@ record(calc, "$(user):currentDLI"){
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC, "current integrated Daily light Integral")
 
-	field(INPA, "$(user):Lum1")
+	field(INPA, "$(user):Lum1")					#PPFD  units (PARspecturm) (micromol.m^-2.sec^-1)
 	field(INPB, "$(user):currentDLI")
-	field(CALC, "A*1e-6+B")
+	field(INPC, "$(user):LEDLight")		#0/1 multyply by 80 for PPFD units
 
-	field(SCAN, "1 second")
+	field(CALC, "A*1e-6+B+C*80*1e-6")						#DLI(mol.m^-2.day^-1)
+
+	field(SCAN, "1 second")						#Thisis the integration time
 	field(EGU, "DLI")
 	#field(PREC, "6")
 	#field(ADEL, "10")
@@ -26,6 +28,7 @@ record(calc, "$(user):currentDLI"){
 	field(PREC,	"1")
 }
 
+#last day DLI
 record(ai, "$(user):DLI"){
 	info(autosaveFields, "VAL")		#autosave
 	field(DESC, "Daily light Integral (mol.m-2.day-1)")
@@ -33,6 +36,39 @@ record(ai, "$(user):DLI"){
 	field(PINI,	"YES")
 	field(PREC,	"1")
 }
+
+###################################
+# Setpoint
+###################################
+record(ao, "$(user):DLISetpoint"){
+	info(autosaveFields, "VAL")		#autosave
+	field(DTYP, "Soft Channel")	#this is done by default
+	field(EGU,	"DLI")
+	#field(SCAN, "2 second")
+	field(VAL, "10")		#init setpoint
+	field(PINI,	"YES")
+
+	#field(DRVH, "0")
+	#field(DRVL, "100")
+	field(PREC,	"1")
+}
+
+###################################
+# Control-Light
+###################################
+record(calc,	"$(user):ControlLight") {
+	field(DESC,	"ControlLight")
+	field(CALC,	"(A>120000 && B<C && D<80)?1:0")
+	field(SCAN,	"1 second")
+
+	field(INPA,	"$(user):clock")		#format 120000
+	field(INPB,	"$(user):currentDLI")
+	field(INPC,	"$(user):DLISetpoint")
+	field(INPD,	"$(user):Lum1")
+
+	field(FLNK,	"$(user):LEDLight")
+}
+
 
 record(stringin,"$(user):clock") {
   field(DTYP,"Soft Timestamp")
@@ -66,12 +102,28 @@ record(stringin,"$(user):seconds") {
   field(DTYP,"Soft Timestamp")
   field(INP,"@%S")
   field(SCAN,"1 second")
-  field(FLNK,"$(user):Ts")
+  field(FLNK,"$(user):TsFanout0")
 }
+
+record(fanout, "$(user):TsFanout0") {
+	# Before control
+	field(LNK1, "$(user):Ts")
+	field(LNK2, "$(user):Ts10")
+}
+record(calc,	"$(user):Ts10") {
+	field(DESC,	"description")
+	field(PINI,	"YES")
+	field(VAL,	"0")
+	field(CALC,	"(A==0)?0:(B+1)")
+	field(INPA,"$(user):Ts")
+	field(INPB,"$(user):Ts10")
+	#field(FLNK,"$(user):Ts")
+}
+
 record(calcout,"$(user):Ts") {
   field(INPA,"$(user):seconds")
 	#  field(CALC,"A>235950?1:0")
-  field(CALC,"A<1?0:1")				#CALC is always 1 if A =00 calc changes to 0
+  field(CALC,"A%10=0?0:1")				#CALC is always 1 if A =00 calc changes to 0
   field(OOPT,"Transition To Zero")	#when A=0 there is a transition to zero
   field(OUT,"$(user):TsFanout PP")	#and this is processed
 }
