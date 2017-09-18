@@ -58,7 +58,7 @@ record(ao, "$(user):DLISetpoint"){
 ###################################
 record(calc,	"$(user):ControlLight") {
 	field(DESC,	"ControlLight")
-	field(CALC,	"(A>120000 && B<C && D<80)?1:0")
+	field(CALC,	"(A>160000 && B<C && D<80)?1:0")
 	field(SCAN,	"1 second")
 
 	field(INPA,	"$(user):clock")		#format 120000

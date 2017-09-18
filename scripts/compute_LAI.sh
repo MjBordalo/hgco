@@ -6,7 +6,7 @@ echo "running CVscript"
 
 
 DATE=$(date +"%Y_%m_%d-%H_%M")
-EXPNAME='Exp03' #Please do not use whitespaces
+EXPNAME='Exp05' #Please do not use whitespaces
 
 #Change to to camera folder
 cd /home/pi/camera
@@ -36,3 +36,6 @@ echo "Photo Taken"
 /home/pi/hgco/scripts/compute_LAI.py -i /home/pi/camera/$EXPNAME-$DATE.jpg -o output -D 'print' -r $EXPNAME-$DATE-results.txt
 #/home/pi/hgco/scripts/compute_LAI.py -i /home/pi/camera/ExperienceName-2017_04_18-18_25.jpg -o output -D 'print' -r $EXPNAME-$DATE-results.txt
 echo "PlantCV pipeline runned"
+
+sleep 5s
+sudo reboot
