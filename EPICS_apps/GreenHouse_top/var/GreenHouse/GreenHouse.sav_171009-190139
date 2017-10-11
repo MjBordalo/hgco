@@ -1,0 +1,21 @@
+# autosave R5.3	Automatically generated - DO NOT MODIFY - 171009-190117
+miHost:DLI.VAL 8.5320204742211
+miHost:HumInPredictorDelayed.VAL 23.891009
+miHost:LAI_1.VAL 31450
+miHost:LAI_2.VAL 30211
+miHost:LAI_3.VAL 34905
+miHost:LAI_4.VAL 34848
+miHost:Apperture.VAL 4
+miHost:Apperture.OMSL 1
+miHost:DLISetpoint.VAL 7
+miHost:Fan.VAL 15.352972368677
+miHost:Fan.OMSL 1
+miHost:HumSetpoint.VAL 65
+miHost:UserTempSetpoint.VAL 25
+miHost:MixMaker.VAL 1
+miHost:MixMaker.OMSL 1
+miHost:MixMakerFan.VAL 1
+miHost:MixMakerFan.OMSL 1
+miHost:currentDLI.VAL 7.6800888951197
+miHost:ExpString.VAL no experience
+<END>

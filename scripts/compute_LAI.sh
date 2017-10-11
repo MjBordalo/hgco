@@ -6,7 +6,7 @@ echo "running CVscript"
 
 
 DATE=$(date +"%Y_%m_%d-%H_%M")
-EXPNAME='Exp05' #Please do not use whitespaces
+EXPNAME='Exp06' #Please do not use whitespaces
 
 #Change to to camera folder
 cd /home/pi/camera
