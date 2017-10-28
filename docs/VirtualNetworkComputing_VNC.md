@@ -5,7 +5,7 @@ is a graphical desktop sharing system that allows you to control one computer re
 ### Enabling on Pi - Server
 https://www.raspberrypi.org/documentation/remote-access/vnc/
 ### Install client:
-on linux download the file from the site
+on linux download the file from the site: https://www.realvnc.com/en/connect/download/viewer/linux/
 
 in case of resolutions problems edit ```/boot/config.txt```
 and enabled\uncomment these configs:
