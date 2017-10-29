@@ -7,3 +7,7 @@
 # Pi specific commands
 
 * Check pi CPU temperature `/opt/vc/bin/vcgencmd measure_temp`
+
+# Linux commands with Pi applications
+
+* backup Pi image source: https://beebom.com/how-clone-raspberry-pi-sd-card-windows-linux-macos/
